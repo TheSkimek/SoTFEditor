@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoTFEditor", "SoTFEditor.csproj", "{659F74AE-899A-473D-8E11-46158AF76D65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{21A1C3C1-A897-4409-9E1F-BBCF98E7BB0F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{659F74AE-899A-473D-8E11-46158AF76D65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{659F74AE-899A-473D-8E11-46158AF76D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{659F74AE-899A-473D-8E11-46158AF76D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{659F74AE-899A-473D-8E11-46158AF76D65}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {602F173A-AC07-4C5A-B3DD-3D2261274619}
+	EndGlobalSection
+EndGlobal

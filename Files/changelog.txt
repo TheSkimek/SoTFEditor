@@ -1,0 +1,19 @@
+﻿SOFTEditor Changelog:
+######
+Version 1.0:
+- Added 61 ItemIDs
+- Added buttons to set all items to 100 (too high of a number will crash the game on opening inventory)
+- Added button to remove all items
+
+Version 0.3:
+- Changed layout and added Readme.txt
+- Added MenuStrip items "Help" and "Tools"
+- Added "Create Backup" Tool
+- Added "Regrow Trees" Tool
+
+Version 0.2:
+-Added Update functionality
+
+Version 0.1:
+- First realease with 129 items
+######
