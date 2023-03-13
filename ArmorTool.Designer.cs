@@ -1,6 +1,6 @@
 ﻿namespace SoTFEditor
 {
-    partial class Form1
+    partial class ArmorTool
     {
         /// <summary>
         /// Required designer variable.
@@ -54,7 +54,7 @@
             armorTypeBox.TabIndex = 2;
             armorTypeBox.SelectedIndexChanged += armorTypeBox_SelectedIndexChanged;
             // 
-            // Form1
+            // ArmorTool
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -62,9 +62,9 @@
             Controls.Add(armorTypeBox);
             Controls.Add(writeArmorButton);
             HelpButton = true;
-            Name = "Form1";
+            Name = "ArmorTool";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Form1";
+            Text = "Armor Tool";
             ResumeLayout(false);
         }
 

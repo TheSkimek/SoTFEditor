@@ -1,5 +1,9 @@
 ﻿SOFTEditor Changelog:
 ######
+Version 1.1:
+- Changed position of armor tool
+- Added Help function to open savegame folder
+
 Version 1.0:
 - Added 60 ItemIDs
 - Added buttons to set all items to 100 (higher number will crash the game on opening inventory)

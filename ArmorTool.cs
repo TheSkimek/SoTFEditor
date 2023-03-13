@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace SoTFEditor
 {
-    public partial class Form1 : Form
+    public partial class ArmorTool : Form
     {
         string savePath;
 
@@ -14,7 +14,7 @@ namespace SoTFEditor
 
         int[] armorSlots = new int[] { 0, 1, 4, 5, 6, 7, 8, 9, 10, 11 };
 
-        public Form1()
+        public ArmorTool()
         {
             InitializeComponent();
             armorTypeBox.DataSource = Enum.GetValues(typeof(armorTypes));
@@ -49,6 +49,7 @@ namespace SoTFEditor
             saveFileArmorObject["Data"]["PlayerArmourSystem"] = JsonConvert.SerializeObject(armorSystemObject);
 
             File.WriteAllText(savePath + playerArmorFile, JsonConvert.SerializeObject(saveFileArmorObject));
+            MessageBox.Show(string.Format("Changed all armor to {0}", armorTypeBox.SelectedValue.ToString()));
         }
 
         private void armorTypeBox_SelectedIndexChanged(object sender, EventArgs e)

@@ -166,6 +166,8 @@ namespace SoTFEditor
             emptyButton.Enabled = true;
             openTestToolStripMenuItem.Enabled = true;
             openTestToolStripMenuItem.ToolTipText = string.Empty;
+            openSaveGameFolderToolStripMenuItem.Enabled = true;
+            openSaveGameFolderToolStripMenuItem.ToolTipText = string.Empty;
         }
 
         private void changeMyColor(object? sender, EventArgs e, string oldAmount)
@@ -393,11 +395,16 @@ namespace SoTFEditor
             }
         }
 
-        private void openTestToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openArmorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form1 f2 = new Form1();
+            ArmorTool f2 = new ArmorTool();
             f2.receiveData(completePath);
             f2.ShowDialog();
+        }
+
+        private void openSaveGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer", completePath);
         }
     }
 }

@@ -46,12 +46,13 @@
             createBackupToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator8 = new ToolStripSeparator();
             regrowAllTreesToolStripMenuItem = new ToolStripMenuItem();
+            openTestToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             openReadMeToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripMenuItem();
+            openSaveGameFolderToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             clickMeToolStripMenuItem = new ToolStripMenuItem();
-            openTestToolStripMenuItem = new ToolStripMenuItem();
             newToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
@@ -231,7 +232,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { createBackupToolStripMenuItem, toolStripSeparator8, regrowAllTreesToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { createBackupToolStripMenuItem, toolStripSeparator8, regrowAllTreesToolStripMenuItem, openTestToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(58, 24);
             toolsToolStripMenuItem.Tag = "";
@@ -240,25 +241,34 @@
             // createBackupToolStripMenuItem
             // 
             createBackupToolStripMenuItem.Name = "createBackupToolStripMenuItem";
-            createBackupToolStripMenuItem.Size = new Size(199, 26);
+            createBackupToolStripMenuItem.Size = new Size(224, 26);
             createBackupToolStripMenuItem.Text = "Create Backup";
             createBackupToolStripMenuItem.Click += createBackupToolStripMenuItem_Click;
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new Size(196, 6);
+            toolStripSeparator8.Size = new Size(221, 6);
             // 
             // regrowAllTreesToolStripMenuItem
             // 
             regrowAllTreesToolStripMenuItem.Name = "regrowAllTreesToolStripMenuItem";
-            regrowAllTreesToolStripMenuItem.Size = new Size(199, 26);
+            regrowAllTreesToolStripMenuItem.Size = new Size(224, 26);
             regrowAllTreesToolStripMenuItem.Text = "Regrow all trees";
             regrowAllTreesToolStripMenuItem.Click += regrowAllTreesToolStripMenuItem_Click;
             // 
+            // openTestToolStripMenuItem
+            // 
+            openTestToolStripMenuItem.Enabled = false;
+            openTestToolStripMenuItem.Name = "openTestToolStripMenuItem";
+            openTestToolStripMenuItem.Size = new Size(224, 26);
+            openTestToolStripMenuItem.Text = "Open Armor Tool";
+            openTestToolStripMenuItem.ToolTipText = "Select a folder first";
+            openTestToolStripMenuItem.Click += openArmorToolStripMenuItem_Click;
+            // 
             // helpToolStripMenuItem
             // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openReadMeToolStripMenuItem, toolStripMenuItem1, toolStripSeparator7, clickMeToolStripMenuItem, openTestToolStripMenuItem });
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openReadMeToolStripMenuItem, toolStripMenuItem1, openSaveGameFolderToolStripMenuItem, toolStripSeparator7, clickMeToolStripMenuItem });
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(55, 24);
             helpToolStripMenuItem.Text = "&Help";
@@ -266,7 +276,7 @@
             // openReadMeToolStripMenuItem
             // 
             openReadMeToolStripMenuItem.Name = "openReadMeToolStripMenuItem";
-            openReadMeToolStripMenuItem.Size = new Size(207, 26);
+            openReadMeToolStripMenuItem.Size = new Size(248, 26);
             openReadMeToolStripMenuItem.Tag = ".\\Files\\Readme.txt";
             openReadMeToolStripMenuItem.Text = "Open ReadMe";
             openReadMeToolStripMenuItem.Click += openFileToolStripMenuItem_Click;
@@ -274,31 +284,31 @@
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(207, 26);
+            toolStripMenuItem1.Size = new Size(248, 26);
             toolStripMenuItem1.Tag = ".\\Files\\ItemIDList.csv";
             toolStripMenuItem1.Text = "Open ItemIDList";
             toolStripMenuItem1.Click += openFileToolStripMenuItem_Click;
             // 
+            // openSaveGameFolderToolStripMenuItem
+            // 
+            openSaveGameFolderToolStripMenuItem.Enabled = false;
+            openSaveGameFolderToolStripMenuItem.Name = "openSaveGameFolderToolStripMenuItem";
+            openSaveGameFolderToolStripMenuItem.Size = new Size(248, 26);
+            openSaveGameFolderToolStripMenuItem.Text = "Open SaveGame Folder";
+            openSaveGameFolderToolStripMenuItem.ToolTipText = "Select a folder first";
+            openSaveGameFolderToolStripMenuItem.Click += openSaveGameFolderToolStripMenuItem_Click;
+            // 
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(204, 6);
+            toolStripSeparator7.Size = new Size(245, 6);
             // 
             // clickMeToolStripMenuItem
             // 
             clickMeToolStripMenuItem.Name = "clickMeToolStripMenuItem";
-            clickMeToolStripMenuItem.Size = new Size(207, 26);
+            clickMeToolStripMenuItem.Size = new Size(248, 26);
             clickMeToolStripMenuItem.Text = "Check for Update";
             clickMeToolStripMenuItem.Click += checkForUpdateToolStripMenuItem_Click;
-            // 
-            // openTestToolStripMenuItem
-            // 
-            openTestToolStripMenuItem.Enabled = false;
-            openTestToolStripMenuItem.Name = "openTestToolStripMenuItem";
-            openTestToolStripMenuItem.Size = new Size(207, 26);
-            openTestToolStripMenuItem.Text = "Open Test";
-            openTestToolStripMenuItem.ToolTipText = "Select a folder first";
-            openTestToolStripMenuItem.Click += openTestToolStripMenuItem_Click;
             // 
             // newToolStripMenuItem
             // 
@@ -569,5 +579,6 @@
         private Button maxButton;
         private Button emptyButton;
         private ToolStripMenuItem openTestToolStripMenuItem;
+        private ToolStripMenuItem openSaveGameFolderToolStripMenuItem;
     }
 }
