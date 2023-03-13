@@ -18,7 +18,7 @@ namespace SoTFEditor
         string folder;
         string completePath;
 
-        string file = "PlayerInventorySaveData.json";
+        string inventoryFile = "PlayerInventorySaveData.json";
 
         string itemIDListFile = System.Windows.Forms.Application.StartupPath + @"Files\ItemIDList.csv";
 
@@ -164,6 +164,8 @@ namespace SoTFEditor
 
             maxButton.Enabled = true;
             emptyButton.Enabled = true;
+            openTestToolStripMenuItem.Enabled = true;
+            openTestToolStripMenuItem.ToolTipText = string.Empty;
         }
 
         private void changeMyColor(object? sender, EventArgs e, string oldAmount)
@@ -215,16 +217,17 @@ namespace SoTFEditor
 
             string updatedBaseString = saveFileObject.ToString();
             string unescapedString = updatedBaseString.Replace(@"\r\n", "").Replace(@" ", "");
-            string cleaned = unescapedString.Replace("\n", "").Replace("\r", "");
+            //string cleaned = unescapedString.Replace("\n", "").Replace("\r", "");
+            string cleaned = unescapedString.Replace(Environment.NewLine, "");
 
-            File.WriteAllText(completePath + file, cleaned);
+            File.WriteAllText(completePath + inventoryFile, cleaned);
             fillList();
         }
 
         private void readFile()
         {
             //SaveFileObject
-            saveFileObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(completePath + file));
+            saveFileObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(completePath + inventoryFile));
 
             //Get Inventory token from saveFileObject
             JToken inventoryToken = saveFileObject.SelectToken("Data.PlayerInventory");
@@ -393,6 +396,7 @@ namespace SoTFEditor
         private void openTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form1 f2 = new Form1();
+            f2.receiveData(completePath);
             f2.ShowDialog();
         }
     }

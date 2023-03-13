@@ -51,6 +51,7 @@
             toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripSeparator7 = new ToolStripSeparator();
             clickMeToolStripMenuItem = new ToolStripMenuItem();
+            openTestToolStripMenuItem = new ToolStripMenuItem();
             newToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
@@ -78,7 +79,6 @@
             aboutToolStripMenuItem = new ToolStripMenuItem();
             maxButton = new Button();
             emptyButton = new Button();
-            openTestToolStripMenuItem = new ToolStripMenuItem();
             panel2.SuspendLayout();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -136,7 +136,7 @@
             panel1.AutoScroll = true;
             panel1.Location = new Point(12, 67);
             panel1.Name = "panel1";
-            panel1.Size = new Size(512, 509);
+            panel1.Size = new Size(512, 700);
             panel1.TabIndex = 5;
             // 
             // panel2
@@ -151,7 +151,7 @@
             panel2.Controls.Add(changesButton);
             panel2.Location = new Point(527, 67);
             panel2.Name = "panel2";
-            panel2.Size = new Size(284, 509);
+            panel2.Size = new Size(293, 700);
             panel2.TabIndex = 6;
             // 
             // userIDComboBox
@@ -213,7 +213,7 @@
             versionLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             versionLabel.AutoSize = true;
             versionLabel.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
-            versionLabel.Location = new Point(703, 595);
+            versionLabel.Location = new Point(712, 786);
             versionLabel.Name = "versionLabel";
             versionLabel.Size = new Size(108, 25);
             versionLabel.TabIndex = 5;
@@ -225,7 +225,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(823, 28);
+            menuStrip1.Size = new Size(832, 28);
             menuStrip1.TabIndex = 7;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -266,7 +266,7 @@
             // openReadMeToolStripMenuItem
             // 
             openReadMeToolStripMenuItem.Name = "openReadMeToolStripMenuItem";
-            openReadMeToolStripMenuItem.Size = new Size(224, 26);
+            openReadMeToolStripMenuItem.Size = new Size(207, 26);
             openReadMeToolStripMenuItem.Tag = ".\\Files\\Readme.txt";
             openReadMeToolStripMenuItem.Text = "Open ReadMe";
             openReadMeToolStripMenuItem.Click += openFileToolStripMenuItem_Click;
@@ -274,7 +274,7 @@
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(224, 26);
+            toolStripMenuItem1.Size = new Size(207, 26);
             toolStripMenuItem1.Tag = ".\\Files\\ItemIDList.csv";
             toolStripMenuItem1.Text = "Open ItemIDList";
             toolStripMenuItem1.Click += openFileToolStripMenuItem_Click;
@@ -282,14 +282,23 @@
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(221, 6);
+            toolStripSeparator7.Size = new Size(204, 6);
             // 
             // clickMeToolStripMenuItem
             // 
             clickMeToolStripMenuItem.Name = "clickMeToolStripMenuItem";
-            clickMeToolStripMenuItem.Size = new Size(224, 26);
+            clickMeToolStripMenuItem.Size = new Size(207, 26);
             clickMeToolStripMenuItem.Text = "Check for Update";
             clickMeToolStripMenuItem.Click += checkForUpdateToolStripMenuItem_Click;
+            // 
+            // openTestToolStripMenuItem
+            // 
+            openTestToolStripMenuItem.Enabled = false;
+            openTestToolStripMenuItem.Name = "openTestToolStripMenuItem";
+            openTestToolStripMenuItem.Size = new Size(207, 26);
+            openTestToolStripMenuItem.Text = "Open Test";
+            openTestToolStripMenuItem.ToolTipText = "Select a folder first";
+            openTestToolStripMenuItem.Click += openTestToolStripMenuItem_Click;
             // 
             // newToolStripMenuItem
             // 
@@ -482,18 +491,11 @@
             emptyButton.UseVisualStyleBackColor = true;
             emptyButton.Click += bulkChangeAmount_Click;
             // 
-            // openTestToolStripMenuItem
-            // 
-            openTestToolStripMenuItem.Name = "openTestToolStripMenuItem";
-            openTestToolStripMenuItem.Size = new Size(224, 26);
-            openTestToolStripMenuItem.Text = "Open Test";
-            openTestToolStripMenuItem.Click += openTestToolStripMenuItem_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(823, 629);
+            ClientSize = new Size(832, 820);
             Controls.Add(emptyButton);
             Controls.Add(maxButton);
             Controls.Add(versionLabel);
@@ -505,6 +507,7 @@
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Name = "MainForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "SoTFEditor";
             panel2.ResumeLayout(false);
             panel2.PerformLayout();

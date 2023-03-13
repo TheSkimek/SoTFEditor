@@ -28,33 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            components = new System.ComponentModel.Container();
+            writeArmorButton = new Button();
+            armorTypeBox = new ComboBox();
+            myToolTip = new ToolTip(components);
             SuspendLayout();
             // 
-            // label1
+            // writeArmorButton
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 13F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(437, 199);
-            label1.Name = "label1";
-            label1.Size = new Size(105, 30);
-            label1.TabIndex = 0;
-            label1.Text = "test Form";
+            writeArmorButton.Location = new Point(424, 132);
+            writeArmorButton.Name = "writeArmorButton";
+            writeArmorButton.Size = new Size(262, 81);
+            writeArmorButton.TabIndex = 1;
+            writeArmorButton.Text = "Set all armor to {0}";
+            myToolTip.SetToolTip(writeArmorButton, "It´s over 9000!");
+            writeArmorButton.UseVisualStyleBackColor = true;
+            writeArmorButton.Click += writeArmorButton_Click;
+            // 
+            // armorTypeBox
+            // 
+            armorTypeBox.FormattingEnabled = true;
+            armorTypeBox.Location = new Point(118, 159);
+            armorTypeBox.Name = "armorTypeBox";
+            armorTypeBox.Size = new Size(151, 28);
+            armorTypeBox.TabIndex = 2;
+            armorTypeBox.SelectedIndexChanged += armorTypeBox_SelectedIndexChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(label1);
+            Controls.Add(armorTypeBox);
+            Controls.Add(writeArmorButton);
+            HelpButton = true;
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Form1";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
-        private Label label1;
+        private Button writeArmorButton;
+        private ComboBox armorTypeBox;
+        private ToolTip myToolTip;
     }
 }
