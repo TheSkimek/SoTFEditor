@@ -12,6 +12,11 @@ namespace SoTFEditor
         JObject saveFileObject;
         JObject inventoryObject;
 
+        MegaApiClient client;
+        string currentVersion, newVersion;
+        bool needsUpdate;
+
+
         public Dictionary<string, string> ItemIds = new Dictionary<string, string>();
 
         string savesPath;
@@ -25,7 +30,8 @@ namespace SoTFEditor
         public MainForm()
         {
             InitializeComponent();
-            versionLabel.Text = File.ReadAllText("Version.txt");
+            Task.Factory.StartNew(() => buildVersionText());
+            //buildVersionText();
             getGameSavePath();
             readItemList();
         }
@@ -48,26 +54,11 @@ namespace SoTFEditor
             MessageBox.Show("Is in DEBUG Mode!");
             return;
 #else
-            MegaApiClient client = new MegaApiClient();
-            client.LoginAnonymous();
-
-            Uri fileLink = new Uri("https://mega.nz/folder/k3BHhBZB#FSJ85HfCpjh31DPWEJxD-Q");
-            INode node = client.GetNodesFromLink(fileLink).Where(x => (x.Type == NodeType.File) && (x.Name == "Version.txt")).First();
-
-            using(var stream = client.Download(node))
-            {
-                using(var fileStream = new FileStream("Temp" + node.Name, FileMode.OpenOrCreate))
-                {
-                    stream.CopyTo(fileStream);
-                }
-            }
-
-            string currentVersion = File.ReadAllText(node.Name).Split(": ")[1];
-            string newVersion = File.ReadAllText("Temp" + node.Name).Split(": ")[1];
-            if(currentVersion != newVersion)
+            if(needsUpdate)
             {
                 if(MessageBox.Show(string.Format("There is a new Version available: \n\nCurrent Version: {0}\nNew Version: {1}\n\nDo you want to download the newer Version?", currentVersion, newVersion), "Check for Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    client.LoginAnonymous();
                     Uri updateZipLink = new Uri("https://mega.nz/folder/96wgVRDA#GgMSlj5JmwPV9WGc-UU9Ng");
                     INode zipNode = client.GetNodesFromLink(updateZipLink).Where(x => (x.Type == NodeType.File) && (x.Name == "SoTFEditor.zip")).First();
 
@@ -99,10 +90,44 @@ namespace SoTFEditor
             else
             {
                 MessageBox.Show("App is up-to-date!", "Check for Update");
+            }   
+#endif
+        }
+
+        void buildVersionText()
+        {
+            string versionText = !checkVersions() ? currentVersion : string.Format("{0}   [New Version available: {1}]", currentVersion, newVersion);
+
+            MethodInvoker inv = delegate
+            {
+                this.versionLabel.Text = versionText;
+            };
+
+            this.Invoke(inv);
+        }
+
+        public bool checkVersions()
+        {
+            client = new MegaApiClient();
+            client.LoginAnonymous();
+
+            Uri fileLink = new Uri("https://mega.nz/folder/k3BHhBZB#FSJ85HfCpjh31DPWEJxD-Q");
+            INode node = client.GetNodesFromLink(fileLink).Where(x => (x.Type == NodeType.File) && (x.Name == "Version.txt")).First();
+
+            using(var stream = client.Download(node))
+            {
+                using(var fileStream = new FileStream("Temp" + node.Name, FileMode.OpenOrCreate))
+                {
+                    stream.CopyTo(fileStream);
+                }
             }
 
+            currentVersion = File.ReadAllText(node.Name);
+            newVersion = File.ReadAllText("Temp" + node.Name);
+            File.Delete("Temp" + node.Name);
             client.Logout();
-#endif
+            needsUpdate = currentVersion != newVersion;
+            return needsUpdate;
         }
 
         private void readItemList()

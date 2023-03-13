@@ -1,5 +1,8 @@
 ﻿SOFTEditor Changelog:
 ######
+Version 1.1.1:
+- Improved Updater
+
 Version 1.1:
 - Changed position of armor tool
 - Added Help function to open savegame folder

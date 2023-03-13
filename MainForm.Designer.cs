@@ -137,7 +137,7 @@
             panel1.AutoScroll = true;
             panel1.Location = new Point(12, 67);
             panel1.Name = "panel1";
-            panel1.Size = new Size(512, 700);
+            panel1.Size = new Size(512, 554);
             panel1.TabIndex = 5;
             // 
             // panel2
@@ -152,7 +152,7 @@
             panel2.Controls.Add(changesButton);
             panel2.Location = new Point(527, 67);
             panel2.Name = "panel2";
-            panel2.Size = new Size(293, 700);
+            panel2.Size = new Size(291, 554);
             panel2.TabIndex = 6;
             // 
             // userIDComboBox
@@ -214,11 +214,12 @@
             versionLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             versionLabel.AutoSize = true;
             versionLabel.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
-            versionLabel.Location = new Point(712, 786);
+            versionLabel.Location = new Point(621, 640);
             versionLabel.Name = "versionLabel";
-            versionLabel.Size = new Size(108, 25);
+            versionLabel.Size = new Size(197, 25);
             versionLabel.TabIndex = 5;
-            versionLabel.Text = "Version: 0.0";
+            versionLabel.Text = "Checking for Update...";
+            versionLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // menuStrip1
             // 
@@ -226,7 +227,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(832, 28);
+            menuStrip1.Size = new Size(830, 28);
             menuStrip1.TabIndex = 7;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -241,19 +242,19 @@
             // createBackupToolStripMenuItem
             // 
             createBackupToolStripMenuItem.Name = "createBackupToolStripMenuItem";
-            createBackupToolStripMenuItem.Size = new Size(224, 26);
+            createBackupToolStripMenuItem.Size = new Size(207, 26);
             createBackupToolStripMenuItem.Text = "Create Backup";
             createBackupToolStripMenuItem.Click += createBackupToolStripMenuItem_Click;
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new Size(221, 6);
+            toolStripSeparator8.Size = new Size(204, 6);
             // 
             // regrowAllTreesToolStripMenuItem
             // 
             regrowAllTreesToolStripMenuItem.Name = "regrowAllTreesToolStripMenuItem";
-            regrowAllTreesToolStripMenuItem.Size = new Size(224, 26);
+            regrowAllTreesToolStripMenuItem.Size = new Size(207, 26);
             regrowAllTreesToolStripMenuItem.Text = "Regrow all trees";
             regrowAllTreesToolStripMenuItem.Click += regrowAllTreesToolStripMenuItem_Click;
             // 
@@ -261,7 +262,7 @@
             // 
             openTestToolStripMenuItem.Enabled = false;
             openTestToolStripMenuItem.Name = "openTestToolStripMenuItem";
-            openTestToolStripMenuItem.Size = new Size(224, 26);
+            openTestToolStripMenuItem.Size = new Size(207, 26);
             openTestToolStripMenuItem.Text = "Open Armor Tool";
             openTestToolStripMenuItem.ToolTipText = "Select a folder first";
             openTestToolStripMenuItem.Click += openArmorToolStripMenuItem_Click;
@@ -505,7 +506,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(832, 820);
+            ClientSize = new Size(830, 674);
             Controls.Add(emptyButton);
             Controls.Add(maxButton);
             Controls.Add(versionLabel);
