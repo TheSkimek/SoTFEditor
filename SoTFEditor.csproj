@@ -19,8 +19,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="TestingForm.cs" />
-    <Compile Update="TestingForm.cs" />
+    <Compile Update="MainForm.cs" />
+    <Compile Update="MainForm.cs" />
   </ItemGroup>
 
   <ItemGroup>

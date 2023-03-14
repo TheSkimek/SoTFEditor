@@ -9,17 +9,9 @@ namespace SoTFEditor
 {
     public static class ArmorTool
     {
-        public static string savePath;
-
-        public static string playerArmorFile = "PlayerArmourSystemSaveData.json";
         public static JObject saveFileArmorObject;
 
-        public static int[] armorSlots = new int[] { 0, 1, 4, 5, 6, 7, 8, 9, 10, 11 };
-
-        public static void receiveData(string input)
-        {
-            savePath = input;
-        }
+        public static int[] armorSlots = new int[] { 0, 1, 4, 5, 6, 7, 8, 9, 10, 11 };        
     }
 
     enum armorTypes
