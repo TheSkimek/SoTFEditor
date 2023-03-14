@@ -4,10 +4,12 @@ using System.Diagnostics;
 using CG.Web.MegaApiClient;
 using System.IO;
 using System.IO.Compression;
+using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace SoTFEditor
 {
-    public partial class MainForm : Form
+    public partial class TestingForm : Form
     {
         JObject saveFileObject;
         JObject inventoryObject;
@@ -27,14 +29,166 @@ namespace SoTFEditor
 
         string itemIDListFile = System.Windows.Forms.Application.StartupPath + @"Files\ItemIDList.csv";
 
-        public MainForm()
+        public TestingForm()
         {
             InitializeComponent();
             Task.Factory.StartNew(() => buildVersionText());
-            //buildVersionText();
+            changeWriteButtonText(tabControl1.TabPages[tabControl1.SelectedIndex].Text);
             getGameSavePath();
             readItemList();
+
+            armorTypeBox.DataSource = Enum.GetValues(typeof(armorTypes));
         }
+
+        #region Form Events
+        private void writeFileButton_Click(object sender, EventArgs e)
+        {
+            writeFile();
+        }
+
+        private void folderRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton senderRadio = ((RadioButton)sender);
+
+            if(senderRadio.Checked)
+            {
+                folder = senderRadio.Tag.ToString();
+
+                string[] savesDir = Directory.GetDirectories(savesPath, "*", SearchOption.TopDirectoryOnly);
+
+                userIDComboBox.Items.Clear();
+
+                foreach(string userDir in savesDir)
+                {
+                    userIDComboBox.Items.Add(userDir.Substring(userDir.LastIndexOf("\\") + 1));
+                }
+
+                userIDComboBox.SelectedIndex = 0; //Triggers userIDComboBox_SelectedIndexChanged
+            }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            completePath = savesPath + userIDComboBox.Text + @"\" + folder + @"\" + saveIDComboBox.Text + @"\";
+            ArmorTool.receiveData(completePath);
+            fillList();
+        }
+
+        private void userIDComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            fillSaveIDComboBox();
+        }
+        private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            checkForUpdate();
+        }
+
+        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
+
+            using Process fileopener = new Process();
+
+            fileopener.StartInfo.FileName = "explorer";
+            fileopener.StartInfo.Arguments = "\"" + menuItem.Tag + "\"";
+            fileopener.Start();
+        }
+
+        private void regrowAllTreesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(folder == null)
+            {
+                MessageBox.Show("Please select SaveGame first", "Tree regrow tool");
+            }
+            else
+            {
+                string saveFile = completePath.Split(@"SonsOfTheForest\")[1];
+                DialogResult dialogResult = MessageBox.Show(string.Format("Warning: \n" +
+                                                            "This will regrow ALL trees, even the ones you removed the stump.\n\n" +
+                                                            "Trees might grow through your base or buildings you build! \n" +
+                                                            "There is no check if its possible! \n\n" +
+                                                            "Are you sure you want to regrow all trees for the following SaveFile?\n\n" +
+                                                            "{0}", saveFile),
+                                                            "Tree regrow warning!",
+                                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+                if(dialogResult == DialogResult.Yes)
+                {
+                    Console.WriteLine("{0}", completePath + "WorldObjectLocatorManagerSaveData.json");
+                    File.Delete(completePath + "WorldObjectLocatorManagerSaveData.json");
+                }
+            }
+        }
+
+        private void createBackupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(folder == null)
+            {
+                MessageBox.Show("Please select SaveGame first", "Create Backup tool");
+            }
+            else
+            {
+                string zipName = completePath.Split(@"\").Reverse().Skip(1).First() + ".rar";
+                string zipPath = completePath.Split(folder + @"\")[0];
+                string targetFolder = completePath.Remove(completePath.Length - 1);
+                ZipFile.CreateFromDirectory(targetFolder, zipPath + folder + @"\" + zipName, 0, true);
+            }
+        }
+
+        private void bulkChangeAmount_Click(object sender, EventArgs e)
+        {
+            if((sender as Button).Tag == "True")
+            {
+                panel1.Controls.OfType<CustomTextBox>().ToList().ForEach((tb) => tb.Text = "100");
+            }
+            else
+            {
+                panel1.Controls.OfType<CustomTextBox>().ToList().ForEach((tb) => tb.Text = "-1");
+            }
+        }
+
+        private void openSaveGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer", completePath);
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            changeWriteButtonText(tabControl1.TabPages[tabControl1.SelectedIndex].Text);
+        }
+
+        private void armorTypeBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            writeArmorButton.Text = string.Format("Set all armor to {0}", armorTypeBox.SelectedValue);
+        }
+
+        private void writeArmorButton_Click(object sender, EventArgs e)
+        {
+            string armorPoints = "9999.0";
+
+            ArmorTool.saveFileArmorObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(ArmorTool.savePath + ArmorTool.playerArmorFile));
+
+            JObject armorSystemObject = JsonConvert.DeserializeObject<JObject>(ArmorTool.saveFileArmorObject["Data"]["PlayerArmourSystem"].ToString());
+
+            JArray armorPieces = JArray.Parse(armorSystemObject["ArmourPieces"].ToString());
+
+            armorPieces.Clear();
+
+            foreach(int slotNumber in ArmorTool.armorSlots)
+            {
+                JObject pieceToAdd = new JObject(new JProperty("ItemId", ((int)armorTypeBox.SelectedValue).ToString()),
+                                              new JProperty("Slot", slotNumber.ToString()),
+                                              new JProperty("RemainingArmourpoints", armorPoints));
+                armorPieces.Add(pieceToAdd);
+            }
+
+            armorSystemObject["ArmourPieces"] = armorPieces;
+            ArmorTool.saveFileArmorObject["Data"]["PlayerArmourSystem"] = JsonConvert.SerializeObject(armorSystemObject);
+
+            File.WriteAllText(ArmorTool.savePath + ArmorTool.playerArmorFile, JsonConvert.SerializeObject(ArmorTool.saveFileArmorObject));
+            MessageBox.Show(string.Format("Changed all armor to {0}", armorTypeBox.SelectedValue.ToString()));
+        }
+        #endregion
 
         private void getGameSavePath()
         {
@@ -43,10 +197,6 @@ namespace SoTFEditor
             savesPath = localLow + @"\Endnight\SonsOfTheForest\Saves\";
         }
 
-        private void writeFileButton_Click(object sender, EventArgs e)
-        {
-            writeFile();
-        }
 
         private void checkForUpdate()
         {
@@ -96,8 +246,13 @@ namespace SoTFEditor
 
         void buildVersionText()
         {
+#if DEBUG
+            currentVersion = File.ReadAllText("Version.txt");
+            string versionText = $"DEBUG {currentVersion}";
+            versionLabel.Text = versionText;
+#else
             string versionText = !checkVersions() ? currentVersion : string.Format("{0}   [New Version available: {1}]", currentVersion, newVersion);
-
+#endif
             MethodInvoker inv = delegate
             {
                 this.versionLabel.Text = versionText;
@@ -134,11 +289,6 @@ namespace SoTFEditor
         {
             ItemIds.Clear();
             ItemIds = File.ReadLines(itemIDListFile).Select(line => line.Split(',')).GroupBy(line => line[1], StringComparer.OrdinalIgnoreCase).ToDictionary(line => line.First()[1], line => line.First()[0], StringComparer.OrdinalIgnoreCase);
-        }
-
-        private void fillListButton_Click(object sender, EventArgs e)
-        {
-            fillList();
         }
 
         private void fillList()
@@ -189,6 +339,7 @@ namespace SoTFEditor
 
             maxButton.Enabled = true;
             emptyButton.Enabled = true;
+            writeArmorButton.Enabled = true;
             openSaveGameFolderToolStripMenuItem.Enabled = true;
             openSaveGameFolderToolStripMenuItem.ToolTipText = string.Empty;
         }
@@ -294,38 +445,6 @@ namespace SoTFEditor
             return changedAmounts;
         }
 
-        private void folderRadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            RadioButton senderRadio = ((RadioButton)sender);
-
-            if(senderRadio.Checked)
-            {
-                folder = senderRadio.Tag.ToString();
-
-                string[] savesDir = Directory.GetDirectories(savesPath, "*", SearchOption.TopDirectoryOnly);
-
-                userIDComboBox.Items.Clear();
-
-                foreach(string userDir in savesDir)
-                {
-                    userIDComboBox.Items.Add(userDir.Substring(userDir.LastIndexOf("\\") + 1));
-                }
-
-                userIDComboBox.SelectedIndex = 0; //Triggers userIDComboBox_SelectedIndexChanged
-            }
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            completePath = savesPath + userIDComboBox.Text + @"\" + folder + @"\" + saveIDComboBox.Text + @"\";
-            fillList();
-        }
-
-        private void userIDComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            fillSaveIDComboBox();
-        }
-
         private void fillSaveIDComboBox()
         {
             try
@@ -347,80 +466,9 @@ namespace SoTFEditor
             }
         }
 
-        private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        private void changeWriteButtonText(string input)
         {
-            checkForUpdate();
-        }
-
-        private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
-
-            using Process fileopener = new Process();
-
-            fileopener.StartInfo.FileName = "explorer";
-            fileopener.StartInfo.Arguments = "\"" + menuItem.Tag + "\"";
-            fileopener.Start();
-        }
-
-        private void regrowAllTreesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if(folder == null)
-            {
-                MessageBox.Show("Please select SaveGame first", "Tree regrow tool");
-            }
-            else
-            {
-                string saveFile = completePath.Split(@"SonsOfTheForest\")[1];
-                DialogResult dialogResult = MessageBox.Show(string.Format("Warning: \n" +
-                                                            "This will regrow ALL trees, even the ones you removed the stump.\n\n" +
-                                                            "Trees might grow through your base or buildings you build! \n" +
-                                                            "There is no check if its possible! \n\n" +
-                                                            "Are you sure you want to regrow all trees for the following SaveFile?\n\n" +
-                                                            "{0}", saveFile),
-                                                            "Tree regrow warning!",
-                                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-
-                if(dialogResult == DialogResult.Yes)
-                {
-                    Console.WriteLine("{0}", completePath + "WorldObjectLocatorManagerSaveData.json");
-                    File.Delete(completePath + "WorldObjectLocatorManagerSaveData.json");
-                }
-            }
-        }
-
-        private void createBackupToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if(folder == null)
-            {
-                MessageBox.Show("Please select SaveGame first", "Create Backup tool");
-            }
-            else
-            {
-                string zipName = completePath.Split(@"\").Reverse().Skip(1).First() + ".rar";
-                string zipPath = completePath.Split(folder + @"\")[0];
-                string targetFolder = completePath.Remove(completePath.Length - 1);
-                ZipFile.CreateFromDirectory(targetFolder, zipPath + folder + @"\" + zipName, 0, true);
-            }
-        }
-
-        private void bulkChangeAmount_Click(object sender, EventArgs e)
-        {
-            if((sender as Button).Tag == "True")
-            {
-                Console.WriteLine("Should add max");
-                panel1.Controls.OfType<CustomTextBox>().ToList().ForEach((tb) => tb.Text = "100");
-            }
-            else
-            {
-                Console.WriteLine("Should remove all");
-                panel1.Controls.OfType<CustomTextBox>().ToList().ForEach((tb) => tb.Text = "-1");
-            }
-        }
-
-        private void openSaveGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start("explorer", completePath);
+            changesButton.Text = $"Write changes to {input} file";
         }
     }
 }

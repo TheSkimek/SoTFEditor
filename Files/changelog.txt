@@ -1,5 +1,9 @@
 ﻿SOFTEditor Changelog:
 ######
+Version 1.2:
+- Changed layout to tabs to make important tools more visible
+- Move armor tool to own tab
+
 Version 1.1.1:
 - Improved Updater
 

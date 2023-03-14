@@ -1,6 +1,6 @@
 ﻿namespace SoTFEditor
 {
-    partial class MainForm
+    partial class TestingForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestingForm));
             changesButton = new Button();
             label1 = new Label();
             label2 = new Label();
@@ -79,8 +79,16 @@
             aboutToolStripMenuItem = new ToolStripMenuItem();
             maxButton = new Button();
             emptyButton = new Button();
+            tabControl1 = new TabControl();
+            inventoryTab = new TabPage();
+            armorTab = new TabPage();
+            writeArmorButton = new Button();
+            armorTypeBox = new ComboBox();
             panel2.SuspendLayout();
             menuStrip1.SuspendLayout();
+            tabControl1.SuspendLayout();
+            inventoryTab.SuspendLayout();
+            armorTab.SuspendLayout();
             SuspendLayout();
             // 
             // changesButton
@@ -90,7 +98,7 @@
             changesButton.Name = "changesButton";
             changesButton.Size = new Size(269, 68);
             changesButton.TabIndex = 0;
-            changesButton.Text = "Write changes to file";
+            changesButton.Text = "Write changes to {0} file";
             changesButton.UseVisualStyleBackColor = true;
             changesButton.Click += writeFileButton_Click;
             // 
@@ -100,7 +108,7 @@
             label1.BackColor = Color.LightGray;
             label1.BorderStyle = BorderStyle.FixedSingle;
             label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(12, 39);
+            label1.Location = new Point(8, 18);
             label1.Name = "label1";
             label1.Size = new Size(47, 25);
             label1.TabIndex = 0;
@@ -112,7 +120,7 @@
             label2.BackColor = Color.LightGray;
             label2.BorderStyle = BorderStyle.FixedSingle;
             label2.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            label2.Location = new Point(162, 39);
+            label2.Location = new Point(158, 18);
             label2.Name = "label2";
             label2.Size = new Size(106, 25);
             label2.TabIndex = 3;
@@ -124,7 +132,7 @@
             label3.BackColor = Color.LightGray;
             label3.BorderStyle = BorderStyle.FixedSingle;
             label3.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(312, 39);
+            label3.Location = new Point(308, 18);
             label3.Name = "label3";
             label3.Size = new Size(113, 25);
             label3.TabIndex = 4;
@@ -134,9 +142,9 @@
             // 
             panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             panel1.AutoScroll = true;
-            panel1.Location = new Point(12, 67);
+            panel1.Location = new Point(8, 51);
             panel1.Name = "panel1";
-            panel1.Size = new Size(512, 554);
+            panel1.Size = new Size(512, 565);
             panel1.TabIndex = 5;
             // 
             // panel2
@@ -149,15 +157,15 @@
             panel2.Controls.Add(radioButtonMultHost);
             panel2.Controls.Add(radioButtonSingle);
             panel2.Controls.Add(changesButton);
-            panel2.Location = new Point(527, 67);
+            panel2.Location = new Point(530, 111);
             panel2.Name = "panel2";
-            panel2.Size = new Size(291, 554);
+            panel2.Size = new Size(320, 565);
             panel2.TabIndex = 6;
             // 
             // userIDComboBox
             // 
             userIDComboBox.FormattingEnabled = true;
-            userIDComboBox.Location = new Point(15, 89);
+            userIDComboBox.Location = new Point(12, 95);
             userIDComboBox.Name = "userIDComboBox";
             userIDComboBox.Size = new Size(228, 28);
             userIDComboBox.TabIndex = 4;
@@ -166,7 +174,7 @@
             // radioButtonMultClient
             // 
             radioButtonMultClient.AutoSize = true;
-            radioButtonMultClient.Location = new Point(3, 44);
+            radioButtonMultClient.Location = new Point(12, 44);
             radioButtonMultClient.Name = "radioButtonMultClient";
             radioButtonMultClient.Size = new Size(157, 24);
             radioButtonMultClient.TabIndex = 3;
@@ -178,7 +186,7 @@
             // saveIDComboBox
             // 
             saveIDComboBox.FormattingEnabled = true;
-            saveIDComboBox.Location = new Point(15, 132);
+            saveIDComboBox.Location = new Point(12, 138);
             saveIDComboBox.Name = "saveIDComboBox";
             saveIDComboBox.Size = new Size(228, 28);
             saveIDComboBox.TabIndex = 2;
@@ -187,7 +195,7 @@
             // radioButtonMultHost
             // 
             radioButtonMultHost.AutoSize = true;
-            radioButtonMultHost.Location = new Point(3, 14);
+            radioButtonMultHost.Location = new Point(12, 14);
             radioButtonMultHost.Name = "radioButtonMultHost";
             radioButtonMultHost.Size = new Size(150, 24);
             radioButtonMultHost.TabIndex = 1;
@@ -199,7 +207,7 @@
             // radioButtonSingle
             // 
             radioButtonSingle.AutoSize = true;
-            radioButtonSingle.Location = new Point(153, 14);
+            radioButtonSingle.Location = new Point(162, 14);
             radioButtonSingle.Name = "radioButtonSingle";
             radioButtonSingle.Size = new Size(112, 24);
             radioButtonSingle.TabIndex = 0;
@@ -210,12 +218,11 @@
             // 
             // versionLabel
             // 
-            versionLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            versionLabel.AutoSize = true;
             versionLabel.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
-            versionLabel.Location = new Point(621, 640);
+            versionLabel.ImageAlign = ContentAlignment.MiddleRight;
+            versionLabel.Location = new Point(470, 683);
             versionLabel.Name = "versionLabel";
-            versionLabel.Size = new Size(197, 25);
+            versionLabel.Size = new Size(388, 25);
             versionLabel.TabIndex = 5;
             versionLabel.Text = "Checking for Update...";
             versionLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -226,7 +233,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(830, 28);
+            menuStrip1.Size = new Size(862, 28);
             menuStrip1.TabIndex = 7;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -241,19 +248,19 @@
             // createBackupToolStripMenuItem
             // 
             createBackupToolStripMenuItem.Name = "createBackupToolStripMenuItem";
-            createBackupToolStripMenuItem.Size = new Size(224, 26);
+            createBackupToolStripMenuItem.Size = new Size(199, 26);
             createBackupToolStripMenuItem.Text = "Create Backup";
             createBackupToolStripMenuItem.Click += createBackupToolStripMenuItem_Click;
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new Size(221, 6);
+            toolStripSeparator8.Size = new Size(196, 6);
             // 
             // regrowAllTreesToolStripMenuItem
             // 
             regrowAllTreesToolStripMenuItem.Name = "regrowAllTreesToolStripMenuItem";
-            regrowAllTreesToolStripMenuItem.Size = new Size(224, 26);
+            regrowAllTreesToolStripMenuItem.Size = new Size(199, 26);
             regrowAllTreesToolStripMenuItem.Text = "Regrow all trees";
             regrowAllTreesToolStripMenuItem.Click += regrowAllTreesToolStripMenuItem_Click;
             // 
@@ -471,7 +478,7 @@
             // maxButton
             // 
             maxButton.Enabled = false;
-            maxButton.Location = new Point(442, 37);
+            maxButton.Location = new Point(438, 16);
             maxButton.Name = "maxButton";
             maxButton.Size = new Size(156, 29);
             maxButton.TabIndex = 8;
@@ -483,7 +490,7 @@
             // emptyButton
             // 
             emptyButton.Enabled = false;
-            emptyButton.Location = new Point(604, 37);
+            emptyButton.Location = new Point(600, 16);
             emptyButton.Name = "emptyButton";
             emptyButton.Size = new Size(94, 29);
             emptyButton.TabIndex = 9;
@@ -492,28 +499,90 @@
             emptyButton.UseVisualStyleBackColor = true;
             emptyButton.Click += bulkChangeAmount_Click;
             // 
-            // MainForm
+            // tabControl1
+            // 
+            tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tabControl1.Controls.Add(inventoryTab);
+            tabControl1.Controls.Add(armorTab);
+            tabControl1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            tabControl1.Location = new Point(0, 31);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(862, 649);
+            tabControl1.TabIndex = 10;
+            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
+            // 
+            // inventoryTab
+            // 
+            inventoryTab.Controls.Add(emptyButton);
+            inventoryTab.Controls.Add(maxButton);
+            inventoryTab.Controls.Add(panel1);
+            inventoryTab.Controls.Add(label2);
+            inventoryTab.Controls.Add(label1);
+            inventoryTab.Controls.Add(label3);
+            inventoryTab.Location = new Point(4, 29);
+            inventoryTab.Name = "inventoryTab";
+            inventoryTab.Padding = new Padding(3);
+            inventoryTab.Size = new Size(854, 616);
+            inventoryTab.TabIndex = 0;
+            inventoryTab.Text = "Inventory";
+            inventoryTab.UseVisualStyleBackColor = true;
+            // 
+            // armorTab
+            // 
+            armorTab.Controls.Add(writeArmorButton);
+            armorTab.Controls.Add(armorTypeBox);
+            armorTab.ForeColor = SystemColors.ControlText;
+            armorTab.ImageKey = "(none)";
+            armorTab.Location = new Point(4, 29);
+            armorTab.Name = "armorTab";
+            armorTab.Padding = new Padding(3);
+            armorTab.Size = new Size(854, 616);
+            armorTab.TabIndex = 1;
+            armorTab.Text = "Armor Tool";
+            armorTab.UseVisualStyleBackColor = true;
+            // 
+            // writeArmorButton
+            // 
+            writeArmorButton.Enabled = false;
+            writeArmorButton.Location = new Point(258, 51);
+            writeArmorButton.Name = "writeArmorButton";
+            writeArmorButton.Size = new Size(262, 81);
+            writeArmorButton.TabIndex = 4;
+            writeArmorButton.Text = "Set all armor to {0}";
+            writeArmorButton.UseVisualStyleBackColor = true;
+            writeArmorButton.Click += writeArmorButton_Click;
+            // 
+            // armorTypeBox
+            // 
+            armorTypeBox.FormattingEnabled = true;
+            armorTypeBox.Location = new Point(43, 78);
+            armorTypeBox.Name = "armorTypeBox";
+            armorTypeBox.Size = new Size(151, 28);
+            armorTypeBox.TabIndex = 3;
+            armorTypeBox.SelectedIndexChanged += armorTypeBox_SelectedIndexChanged;
+            // 
+            // TestingForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(830, 674);
-            Controls.Add(emptyButton);
-            Controls.Add(maxButton);
-            Controls.Add(versionLabel);
-            Controls.Add(label3);
-            Controls.Add(label1);
+            ClientSize = new Size(862, 717);
             Controls.Add(panel2);
-            Controls.Add(label2);
-            Controls.Add(panel1);
+            Controls.Add(tabControl1);
+            Controls.Add(versionLabel);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
-            Name = "MainForm";
+            Name = "TestingForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "SoTFEditor";
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            tabControl1.ResumeLayout(false);
+            inventoryTab.ResumeLayout(false);
+            inventoryTab.PerformLayout();
+            armorTab.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -570,5 +639,10 @@
         private Button maxButton;
         private Button emptyButton;
         private ToolStripMenuItem openSaveGameFolderToolStripMenuItem;
+        private TabControl tabControl1;
+        private TabPage armorTab;
+        private TabPage inventoryTab;
+        private ComboBox armorTypeBox;
+        private Button writeArmorButton;
     }
 }
