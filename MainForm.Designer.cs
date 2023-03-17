@@ -36,9 +36,10 @@
             label3 = new Label();
             inventoryPanel = new Panel();
             panel2 = new Panel();
+            saveSelector = new SaveSelector();
+            saveImageBox = new PictureBox();
             userIDComboBox = new ComboBox();
             radioButtonMultClient = new RadioButton();
-            saveIDComboBox = new ComboBox();
             radioButtonMultHost = new RadioButton();
             radioButtonSingle = new RadioButton();
             versionLabel = new Label();
@@ -83,11 +84,13 @@
             tabControl1 = new TabControl();
             inventoryTab = new TabPage();
             armorTab = new TabPage();
-            armorPanel = new Panel();
             armorTypeBox = new ComboBox();
+            armorPanel = new Panel();
+            label5 = new Label();
             writeArmorButton = new Button();
             toolTip1 = new ToolTip(components);
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)saveImageBox).BeginInit();
             menuStrip1.SuspendLayout();
             tabControl1.SuspendLayout();
             inventoryTab.SuspendLayout();
@@ -98,9 +101,9 @@
             // changesButton
             // 
             changesButton.Enabled = false;
-            changesButton.Location = new Point(12, 306);
+            changesButton.Location = new Point(27, 462);
             changesButton.Name = "changesButton";
-            changesButton.Size = new Size(269, 68);
+            changesButton.Size = new Size(256, 68);
             changesButton.TabIndex = 0;
             changesButton.Text = "Write changes to {0} file";
             changesButton.UseVisualStyleBackColor = true;
@@ -155,9 +158,10 @@
             // 
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel2.AutoScroll = true;
+            panel2.Controls.Add(saveSelector);
+            panel2.Controls.Add(saveImageBox);
             panel2.Controls.Add(userIDComboBox);
             panel2.Controls.Add(radioButtonMultClient);
-            panel2.Controls.Add(saveIDComboBox);
             panel2.Controls.Add(radioButtonMultHost);
             panel2.Controls.Add(radioButtonSingle);
             panel2.Controls.Add(changesButton);
@@ -166,12 +170,35 @@
             panel2.Size = new Size(320, 565);
             panel2.TabIndex = 6;
             // 
+            // saveSelector
+            // 
+            saveSelector.DrawMode = DrawMode.OwnerDrawFixed;
+            saveSelector.DropDownStyle = ComboBoxStyle.DropDownList;
+            saveSelector.FormattingEnabled = true;
+            saveSelector.IntegralHeight = false;
+            saveSelector.ItemHeight = 120;
+            saveSelector.Location = new Point(12, 129);
+            saveSelector.Name = "saveSelector";
+            saveSelector.Size = new Size(300, 126);
+            saveSelector.TabIndex = 6;
+            saveSelector.SelectedIndexChanged += saveIDComboBox_SelectedIndexChanged;
+            // 
+            // saveImageBox
+            // 
+            saveImageBox.BorderStyle = BorderStyle.FixedSingle;
+            saveImageBox.ImageLocation = "";
+            saveImageBox.Location = new Point(27, 282);
+            saveImageBox.Name = "saveImageBox";
+            saveImageBox.Size = new Size(256, 160);
+            saveImageBox.TabIndex = 5;
+            saveImageBox.TabStop = false;
+            // 
             // userIDComboBox
             // 
             userIDComboBox.FormattingEnabled = true;
             userIDComboBox.Location = new Point(12, 95);
             userIDComboBox.Name = "userIDComboBox";
-            userIDComboBox.Size = new Size(228, 28);
+            userIDComboBox.Size = new Size(300, 28);
             userIDComboBox.TabIndex = 4;
             userIDComboBox.SelectedIndexChanged += userIDComboBox_SelectedIndexChanged;
             // 
@@ -186,15 +213,6 @@
             radioButtonMultClient.Text = "Multiplayer (Client)";
             radioButtonMultClient.UseVisualStyleBackColor = true;
             radioButtonMultClient.CheckedChanged += folderRadioButton_CheckedChanged;
-            // 
-            // saveIDComboBox
-            // 
-            saveIDComboBox.FormattingEnabled = true;
-            saveIDComboBox.Location = new Point(12, 138);
-            saveIDComboBox.Name = "saveIDComboBox";
-            saveIDComboBox.Size = new Size(228, 28);
-            saveIDComboBox.TabIndex = 2;
-            saveIDComboBox.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // radioButtonMultHost
             // 
@@ -215,7 +233,7 @@
             radioButtonSingle.Name = "radioButtonSingle";
             radioButtonSingle.Size = new Size(112, 24);
             radioButtonSingle.TabIndex = 0;
-            radioButtonSingle.Tag = "Singleplayer";
+            radioButtonSingle.Tag = "SinglePlayer";
             radioButtonSingle.Text = "Singleplayer";
             radioButtonSingle.UseVisualStyleBackColor = true;
             radioButtonSingle.CheckedChanged += folderRadioButton_CheckedChanged;
@@ -534,7 +552,9 @@
             // 
             // armorTab
             // 
+            armorTab.Controls.Add(armorTypeBox);
             armorTab.Controls.Add(armorPanel);
+            armorTab.Controls.Add(writeArmorButton);
             armorTab.ForeColor = SystemColors.ControlText;
             armorTab.ImageKey = "(none)";
             armorTab.Location = new Point(4, 29);
@@ -545,35 +565,45 @@
             armorTab.Text = "Armor Tool";
             armorTab.UseVisualStyleBackColor = true;
             // 
-            // armorPanel
-            // 
-            armorPanel.Controls.Add(armorTypeBox);
-            armorPanel.Controls.Add(writeArmorButton);
-            armorPanel.Location = new Point(0, 51);
-            armorPanel.Name = "armorPanel";
-            armorPanel.Size = new Size(520, 565);
-            armorPanel.TabIndex = 5;
-            // 
             // armorTypeBox
             // 
             armorTypeBox.FormattingEnabled = true;
-            armorTypeBox.Location = new Point(18, 95);
+            armorTypeBox.Location = new Point(17, 539);
             armorTypeBox.Name = "armorTypeBox";
             armorTypeBox.Size = new Size(151, 28);
             armorTypeBox.TabIndex = 3;
             armorTypeBox.SelectedIndexChanged += armorTypeBox_SelectedIndexChanged;
             // 
+            // armorPanel
+            // 
+            armorPanel.Controls.Add(label5);
+            armorPanel.Location = new Point(8, 51);
+            armorPanel.Name = "armorPanel";
+            armorPanel.Size = new Size(512, 455);
+            armorPanel.TabIndex = 5;
+            // 
+            // label5
+            // 
+            label5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
+            label5.Location = new Point(131, 211);
+            label5.Name = "label5";
+            label5.Size = new Size(251, 32);
+            label5.TabIndex = 1;
+            label5.Text = "Select SaveGame first!";
+            // 
             // writeArmorButton
             // 
             writeArmorButton.Enabled = false;
-            writeArmorButton.Location = new Point(232, 68);
+            writeArmorButton.Location = new Point(231, 512);
             writeArmorButton.Name = "writeArmorButton";
             writeArmorButton.Size = new Size(262, 81);
             writeArmorButton.TabIndex = 4;
             writeArmorButton.Text = "Set all armor to {0}";
             toolTip1.SetToolTip(writeArmorButton, "It´s over 9000!");
             writeArmorButton.UseVisualStyleBackColor = true;
-            writeArmorButton.Click += writeArmorButton_Click;
+            writeArmorButton.Click += setArmorButton_Click;
             // 
             // MainForm
             // 
@@ -590,6 +620,7 @@
             Text = "SoTFEditor";
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)saveImageBox).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             tabControl1.ResumeLayout(false);
@@ -597,6 +628,7 @@
             inventoryTab.PerformLayout();
             armorTab.ResumeLayout(false);
             armorPanel.ResumeLayout(false);
+            armorPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -611,7 +643,6 @@
         private Panel panel2;
         private RadioButton radioButtonMultHost;
         private RadioButton radioButtonSingle;
-        private ComboBox saveIDComboBox;
         private RadioButton radioButtonMultClient;
         private ComboBox userIDComboBox;
         private Label versionLabel;
@@ -660,5 +691,8 @@
         private Button writeArmorButton;
         private Panel armorPanel;
         private ToolTip toolTip1;
+        private Label label5;
+        private PictureBox saveImageBox;
+        private SaveSelector saveSelector;
     }
 }

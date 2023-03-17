@@ -2,8 +2,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using CG.Web.MegaApiClient;
+using System.IO;
 using System.IO.Compression;
-using Microsoft.VisualBasic.ApplicationServices;
+using System.Text.Unicode;
+using System.Text;
+using SoTFEditor.Properties;
 
 namespace SoTFEditor
 {
@@ -15,6 +18,7 @@ namespace SoTFEditor
         MegaApiClient client;
         string currentVersion, newVersion;
         bool needsUpdate;
+        List<itemChange> itemChangesList = new List<itemChange>();
 
         public Dictionary<string, string> ItemIds = new Dictionary<string, string>();
 
@@ -23,9 +27,10 @@ namespace SoTFEditor
         public MainForm()
         {
             InitializeComponent();
+
             Task.Factory.StartNew(() => buildVersionText());
-            changeWriteButtonText(tabControl1.TabPages[tabControl1.SelectedIndex].Text);
             SaveManager.setGameSavePath();
+            changeWriteButtonText(tabControl1.TabPages[tabControl1.SelectedIndex].Text);
             readItemList();
             armorTypeBox.DataSource = Enum.GetValues(typeof(armorTypes));
         }
@@ -43,7 +48,6 @@ namespace SoTFEditor
             if(senderRadio.Checked)
             {
                 SaveManager.changeFolder(senderRadio.Tag.ToString());
-
                 userIDComboBox.Items.Clear();
 
                 foreach(string userDir in SaveManager.getUserDirectories())
@@ -55,16 +59,21 @@ namespace SoTFEditor
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SaveManager.changeCompletePath(userIDComboBox.Text, saveIDComboBox.Text);
-            fillList();
-        }
-
         private void userIDComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             fillSaveIDComboBox();
         }
+
+        private void saveIDComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SaveManager.changeCompletePath(userIDComboBox.Text, saveSelector.Text);
+           
+            saveImageBox.Image = ((DropDownItem)saveSelector.SelectedItem).Image;
+            openSaveGameFolderToolStripMenuItem.Enabled = true;
+            openSaveGameFolderToolStripMenuItem.ToolTipText = string.Empty;
+            fillSelectedPanel();
+        }
+
         private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             checkForUpdate();
@@ -73,53 +82,17 @@ namespace SoTFEditor
         private void openFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = ((ToolStripMenuItem)sender);
-
-            using Process fileopener = new Process();
-
-            fileopener.StartInfo.FileName = "explorer";
-            fileopener.StartInfo.Arguments = "\"" + menuItem.Tag + "\"";
-            fileopener.Start();
+            Process.Start("explorer", "\"" + menuItem.Tag + "\"");
         }
 
         private void regrowAllTreesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(SaveManager.folder == null)
-            {
-                MessageBox.Show("Please select SaveGame first", "Tree regrow tool");
-            }
-            else
-            {
-                string saveFile = SaveManager.completePath.Split(@"SonsOfTheForest\")[1];
-                DialogResult dialogResult = MessageBox.Show(string.Format("Warning: \n" +
-                                                            "This will regrow ALL trees, even the ones you removed the stump.\n\n" +
-                                                            "Trees might grow through your base or buildings you build! \n" +
-                                                            "There is no check if its possible! \n\n" +
-                                                            "Are you sure you want to regrow all trees for the following SaveFile?\n\n" +
-                                                            "{0}", saveFile),
-                                                            "Tree regrow warning!",
-                                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-
-                if(dialogResult == DialogResult.Yes)
-                {
-                    Console.WriteLine("{0}", SaveManager.completePath + "WorldObjectLocatorManagerSaveData.json");
-                    File.Delete(SaveManager.completePath + "WorldObjectLocatorManagerSaveData.json");
-                }
-            }
+            regrowAllTrees();
         }
 
         private void createBackupToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(SaveManager.folder == null)
-            {
-                MessageBox.Show("Please select SaveGame first", "Create Backup tool");
-            }
-            else
-            {
-                string zipName = SaveManager.completePath.Split(@"\").Reverse().Skip(1).First() + ".rar";
-                string zipPath = SaveManager.completePath.Split(SaveManager.folder + @"\")[0];
-                string targetFolder = SaveManager.completePath.Remove(SaveManager.completePath.Length - 1);
-                ZipFile.CreateFromDirectory(targetFolder, zipPath + SaveManager.folder + @"\" + zipName, 0, true);
-            }
+            SaveManager.createBackupFile();
         }
 
         private void bulkChangeAmount_Click(object sender, EventArgs e)
@@ -130,7 +103,21 @@ namespace SoTFEditor
             }
             else
             {
-                inventoryPanel.Controls.OfType<CustomTextBox>().ToList().ForEach((tb) => tb.Text = "-1");
+                ///Some items have unique behaviour that wont let us delete them like this, e.g. Stun Baton with its battery charge or fish with its decay counter.
+                //inventoryPanel.Controls.OfType<CustomTextBox>().ToList().ForEach((tb) => tb.Text = "-1"); 
+
+                DialogResult dialogResult = MessageBox.Show("Warning: \n" +
+                                                            "Your inventory will be emptied and you will only have the starter items.\n\n" +
+                                                            "Are you sure you want to remove all items from inventory?",
+                                                            "Remove ALL items warning",
+                                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+                if(dialogResult == DialogResult.Yes)
+                {
+                    SaveManager.writeToFile(saveFile.inventory, "", true);
+                    itemChangesList.Clear();
+                    fillList();
+                }
             }
         }
 
@@ -142,7 +129,10 @@ namespace SoTFEditor
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             changeWriteButtonText(tabControl1.TabPages[tabControl1.SelectedIndex].Text);
-            changesButton.Visible = tabControl1.SelectedIndex == 1 ? false : true;
+            if(SaveManager.pathSet)
+            {
+                fillSelectedPanel();
+            }
             MainForm.ActiveForm.Text = $"SoTFEditor - {tabControl1.TabPages[tabControl1.SelectedIndex].Text}";
         }
 
@@ -151,31 +141,10 @@ namespace SoTFEditor
             writeArmorButton.Text = string.Format("Set all armor to {0}", armorTypeBox.SelectedValue);
         }
 
-        private void writeArmorButton_Click(object sender, EventArgs e)
+        private void setArmorButton_Click(object sender, EventArgs e)
         {
-            string armorPoints = "9999.0";
-
-            ArmorTool.saveFileArmorObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(SaveManager.completePath + SaveManager.playerArmorFile));
-
-            JObject armorSystemObject = JsonConvert.DeserializeObject<JObject>(ArmorTool.saveFileArmorObject["Data"]["PlayerArmourSystem"].ToString());
-
-            JArray armorPieces = JArray.Parse(armorSystemObject["ArmourPieces"].ToString());
-
-            armorPieces.Clear();
-
-            foreach(int slotNumber in ArmorTool.armorSlots)
-            {
-                JObject pieceToAdd = new JObject(new JProperty("ItemId", ((int)armorTypeBox.SelectedValue).ToString()),
-                                              new JProperty("Slot", slotNumber.ToString()),
-                                              new JProperty("RemainingArmourpoints", armorPoints));
-                armorPieces.Add(pieceToAdd);
-            }
-
-            armorSystemObject["ArmourPieces"] = armorPieces;
-            ArmorTool.saveFileArmorObject["Data"]["PlayerArmourSystem"] = JsonConvert.SerializeObject(armorSystemObject);
-
-            File.WriteAllText(SaveManager.savesPath + SaveManager.playerArmorFile, JsonConvert.SerializeObject(ArmorTool.saveFileArmorObject));
-            MessageBox.Show(string.Format("Changed all armor to {0}", armorTypeBox.SelectedValue.ToString()));
+            ArmorTool.setAllArmor((armorTypes)armorTypeBox.SelectedValue);
+            fillArmorList();
         }
         #endregion
 
@@ -278,12 +247,12 @@ namespace SoTFEditor
 
             int pointY = 10;
             int distance = 150;
+            int boxWidth = 130;
             inventoryPanel.Controls.Clear();
             changesButton.Enabled = false;
 
             foreach(var item in ItemIds)
             {
-                int boxWidth = 130;
                 TextBox itemBox = new TextBox();
 
                 itemBox.Text = item.Value;
@@ -296,44 +265,186 @@ namespace SoTFEditor
 
                 TextBox amountBox = new TextBox();
                 amountBox.Text = getAmountByItemId(item.Key);
-                amountBox.Location = new Point(0 + distance, pointY);
+                amountBox.Location = new Point(distance, pointY);
                 amountBox.Width = boxWidth;
                 amountBox.ReadOnly = true;
                 amountBox.BackColor = Color.Silver;
                 inventoryPanel.Controls.Add(amountBox);
 
                 CustomTextBox newAmountBox = new CustomTextBox();
-                newAmountBox.Text = getAmountByItemId(item.Key);
                 newAmountBox.oldValue = newAmountBox.Text;
                 newAmountBox.parentItemId = item.Key.ToString();
+                newAmountBox.CausesValidation = true;
+                newAmountBox.TextChanged += (sender2, e2) => registerChangedTextBox(sender2, e2, amountBox.Text);
+                if(itemChangesList.Any(x => x.itemID == newAmountBox.parentItemId))
+                {
+                    itemChange changedItem = itemChangesList.First(x => x.itemID == newAmountBox.parentItemId);
+                    newAmountBox.Text = changedItem.newValue;
+                    newAmountBox.BackColor = Color.LightCoral;
+                    changesButton.Enabled = true;
+                }
+                else
+                {
+                    newAmountBox.Text = getAmountByItemId(item.Key);
+                }
+
                 newAmountBox.Location = new Point(distance * 2, pointY);
                 newAmountBox.Width = boxWidth;
-                newAmountBox.CausesValidation = true;
-                newAmountBox.TextChanged += (sender2, e2) => changeMyColor(sender2, e2, amountBox.Text);
                 newAmountBox.KeyPress += newAmountBox.validateCustomTextBoxNumber;
 
                 inventoryPanel.Controls.Add(newAmountBox);
 
-                inventoryPanel.Show();
                 pointY += 40;
             }
-
+            inventoryPanel.Show();
             maxButton.Enabled = true;
             emptyButton.Enabled = true;
             writeArmorButton.Enabled = true;
-            openSaveGameFolderToolStripMenuItem.Enabled = true;
-            openSaveGameFolderToolStripMenuItem.ToolTipText = string.Empty;
         }
 
-        private void changeMyColor(object? sender, EventArgs e, string oldAmount)
+        private void fillArmorList()
+        {
+            int pointY = 10;
+            int distance = 150;
+            int boxWidth = 130;
+
+            int selectedIndex = -1;
+
+            armorPanel.Controls.Clear();
+            foreach(var armorSlot in Enum.GetNames(typeof(armorSlots)))
+            {
+                TextBox slotBox = new TextBox();
+                slotBox.Text = armorSlot;
+                slotBox.Location = new Point(0, pointY);
+                slotBox.Width = boxWidth;
+                slotBox.ReadOnly = true;
+                slotBox.BackColor = Color.Silver;
+                armorPanel.Controls.Add(slotBox);
+
+                CustomComboBox selectedArmor = new CustomComboBox();
+                selectedArmor.DataSource = Enum.GetValues(typeof(armorTypes));
+                selectedArmor.Location = new Point(distance, pointY);
+                selectedArmor.parentSlotId = armorSlot;
+                armorPanel.Controls.Add(selectedArmor);
+                string checkSlot = ((int)Enum.Parse(typeof(armorSlots), selectedArmor.parentSlotId)).ToString();
+
+                armorPieceChange changedArmor = ArmorTool.changedArmorPieces.FirstOrDefault(x => x.slotID == checkSlot,null);
+
+                if(changedArmor != null)
+                {
+                    selectedArmor.SelectedIndex = selectedArmor.FindStringExact(Enum.GetName(typeof(armorTypes),changedArmor.newArmorID));
+                    selectedArmor.BackColor = Color.LightCoral;
+                    changesButton.Enabled = true;
+                }
+                else
+                {
+                    var equippedArmor = ArmorTool.armorPieces.FirstOrDefault(x => x["Slot"].ToString() == ((int)Enum.Parse(typeof(armorSlots), armorSlot)).ToString(), null);
+                    string searchString = equippedArmor == null ? "None" : equippedArmor["ItemId"].ToString();
+
+                    selectedIndex = selectedArmor.FindStringExact(Enum.Parse(typeof(armorTypes), searchString).ToString());
+
+                    selectedArmor.SelectedIndex = selectedIndex;
+                }
+
+                selectedArmor.oldIndex = selectedArmor.SelectedIndex;
+                selectedArmor.SelectedIndexChanged += (sender2, e2) => registerChangedComboBox(sender2, e2, selectedArmor.oldIndex);
+
+                CustomTextBox armorValueBox = new CustomTextBox();
+                
+                armorValueBox.oldValue = armorValueBox.Text;
+                armorValueBox.parentItemId = armorSlot;
+                armorValueBox.Location = new Point(distance * 2, pointY);
+                armorValueBox.Width = boxWidth;
+                armorValueBox.CausesValidation = true;
+
+                armorPointsChange changedPoints = ArmorTool.changedArmorPoints.FirstOrDefault(x => x.slotID == checkSlot, null);
+
+                if(changedPoints != null)
+                {
+                    armorValueBox.Text = changedPoints.newArmorPoints;
+                    armorValueBox.BackColor = Color.LightCoral;
+                    changesButton.Enabled = true;
+                }
+                else
+                {
+                    JToken tempToken = ArmorTool.armorPieces.Where(x => x["Slot"].ToString() == ((int)Enum.Parse(typeof(armorSlots), armorSlot)).ToString()).FirstOrDefault();
+                    armorValueBox.Text = tempToken != null ? tempToken["RemainingArmourpoints"].ToString() : "0";
+                }
+                armorValueBox.TextChanged += (sender2, e2) => registerChangedTextBox(sender2, e2, armorValueBox.oldValue, true);
+
+                armorValueBox.KeyPress += armorValueBox.validateCustomTextBoxNumber;
+                armorPanel.Controls.Add(armorValueBox);
+
+                pointY += 40;
+            }
+
+            armorPanel.Show();
+        }
+
+        private void registerChangedTextBox(object? sender, EventArgs e, string oldAmount, bool isArmorPoints = false)
         {
             CustomTextBox thisTextBox = sender as CustomTextBox;
-            thisTextBox.BackColor = thisTextBox.Text != oldAmount ? Color.LightCoral : SystemColors.Window;
-            thisTextBox.changedValue = thisTextBox.Text != oldAmount;
-            if(thisTextBox.changedValue)
+
+            if(!isArmorPoints)
             {
-                changesButton.Enabled = true;
+                itemChangesList.RemoveAll(x => x.itemID == thisTextBox.parentItemId);
+
+                if(thisTextBox.Text != oldAmount)
+                {
+                    itemChangesList.Add(new itemChange(thisTextBox.parentItemId, oldAmount, thisTextBox.Text));
+                    thisTextBox.changedValue = true;
+                    thisTextBox.BackColor = Color.LightCoral;
+                }
+                else
+                {
+                    thisTextBox.changedValue = false;
+                    thisTextBox.BackColor = SystemColors.Window;
+                }
+
+                changesButton.Enabled = itemChangesList.Count > 0 ? true : false;
             }
+            else
+            {
+                ArmorTool.changedArmorPoints.RemoveAll(x => x.slotID == thisTextBox.parentItemId);
+                string selectedArmorSlot = ((int)Enum.Parse(typeof(armorSlots), thisTextBox.parentItemId)).ToString();
+                if(thisTextBox.Text != oldAmount)
+                {
+                    ArmorTool.changedArmorPoints.Add(new armorPointsChange(selectedArmorSlot, oldAmount, thisTextBox.Text));
+                    thisTextBox.changedValue = true;
+                    thisTextBox.BackColor = Color.LightCoral;
+                }
+                else
+                {
+                    thisTextBox.changedValue = false;
+                    thisTextBox.BackColor = SystemColors.Window;
+                }
+
+                changesButton.Enabled = ArmorTool.changedArmorPoints.Count > 0 ? true : false;
+            }
+        }
+
+        private void registerChangedComboBox(object? sender, EventArgs e, int oldIndex)
+        {
+            CustomComboBox thisComboBox = sender as CustomComboBox;
+            string selectedArmorID = ((int)Enum.Parse(typeof(armorSlots), thisComboBox.parentSlotId)).ToString();
+            ArmorTool.changedArmorPieces.RemoveAll(x => x.slotID == selectedArmorID);
+
+            if(thisComboBox.SelectedIndex != oldIndex)
+            {
+                int oldArmorItemID = (int)Enum.Parse(typeof(armorTypes), thisComboBox.Items[oldIndex].ToString());
+                int newArmorItemID = (int)Enum.Parse(typeof(armorTypes), thisComboBox.SelectedValue.ToString());
+
+                ArmorTool.changedArmorPieces.Add(new armorPieceChange(selectedArmorID, oldArmorItemID, newArmorItemID));
+
+                thisComboBox.changedValue = true;
+                thisComboBox.BackColor = Color.LightCoral;
+            }
+            else
+            {
+                thisComboBox.changedValue = false;
+                thisComboBox.BackColor = SystemColors.Window;
+            }
+            changesButton.Enabled = ArmorTool.changedArmorPieces.Count > 0 ? true : false;
         }
 
         private string getAmountByItemId(string itemId)
@@ -351,22 +462,49 @@ namespace SoTFEditor
 
         private void writeFile()
         {
+            switch(tabControl1.SelectedIndex)
+            {
+                case 0:
+                    SaveManager.writeToFile(saveFile.inventory, newInventoryString());
+                    fillList();
+                    break;
+                case 1:
+                    ArmorTool.setChangedArmor();
+                    fillArmorList();
+                    break;
+            }
+        }
+
+        private void readFile()
+        {
+            //SaveFileObject
+            saveFileObject = JsonConvert.DeserializeObject<JObject>(SaveManager.inventorySaveString);
+
+            //Get Inventory token from saveFileObject
+            JToken inventoryToken = saveFileObject.SelectToken("Data.PlayerInventory");
+
+            //As the inventory content is saved as a string it need to be deserzialized again
+            inventoryObject = JsonConvert.DeserializeObject<JObject>(inventoryToken.ToString());
+        }
+
+        private string newInventoryString()
+        {
             JToken newToken;
 
             JToken inventoryToken = saveFileObject.SelectToken("Data.PlayerInventory");
 
-            foreach(var change in findChangedAmount())
+            foreach(var change in itemChangesList)
             {
-                //Tuple is (itemID, newValue, oldValue)
-                if(change.Item3 == "-1")
+                //change is (itemID, newValue, oldValue)
+                if(change.oldValue == "-1")
                 {
-                    addItem(change.Item1, change.Item2);
+                    addItem(change.itemID, change.newValue);
                 }
                 else
                 {
-                    newToken = inventoryObject.SelectToken("ItemInstanceManagerData.ItemBlocks[?(@.ItemId == " + change.Item1 + ")]");
+                    newToken = inventoryObject.SelectToken("ItemInstanceManagerData.ItemBlocks[?(@.ItemId == " + change.itemID + ")]");
                     JToken amount = newToken.SelectToken("TotalCount");
-                    amount.Replace(change.Item2);
+                    amount.Replace(change.newValue);
                 }
             }
 
@@ -374,23 +512,10 @@ namespace SoTFEditor
 
             string updatedBaseString = saveFileObject.ToString();
             string unescapedString = updatedBaseString.Replace(@"\r\n", "").Replace(@" ", "");
-            //string cleaned = unescapedString.Replace("\n", "").Replace("\r", "");
             string cleaned = unescapedString.Replace(Environment.NewLine, "");
+            itemChangesList.Clear();
 
-            File.WriteAllText(SaveManager.completePath + SaveManager.inventoryFile, cleaned);
-            fillList();
-        }
-
-        private void readFile()
-        {
-            //SaveFileObject
-            saveFileObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText(SaveManager.completePath + SaveManager.inventoryFile));
-
-            //Get Inventory token from saveFileObject
-            JToken inventoryToken = saveFileObject.SelectToken("Data.PlayerInventory");
-
-            //As the inventory content is saved as a string it need to be deserzialized again
-            inventoryObject = JsonConvert.DeserializeObject<JObject>(inventoryToken.ToString());
+            return cleaned;
         }
 
         public void addItem(string itemId, string newValue)
@@ -403,8 +528,6 @@ namespace SoTFEditor
         public List<ValueTuple<string, string, string>> findChangedAmount()
         {
             List<ValueTuple<string, string, string>> changedAmounts = new List<ValueTuple<string, string, string>>();
-
-            //this.Controls.OfType<TextBox>().ToList().ForEach((tb) => Console.WriteLine("TextBox entry: {0}", tb.Text));
 
             Control ctrl = this.GetNextControl(this, true);
             while(ctrl != null)
@@ -426,28 +549,70 @@ namespace SoTFEditor
             return changedAmounts;
         }
 
+        private void fillSelectedPanel()
+        {
+            switch(tabControl1.SelectedIndex)
+            {
+                case 0:
+                    armorPanel.Controls.Clear();
+                    changesButton.Enabled = itemChangesList.Count > 0 ? true : false;
+                    fillList();
+                    break;
+                case 1:
+                    inventoryPanel.Controls.Clear();
+                    changesButton.Enabled = ArmorTool.changedArmorPieces.Count > 0 ? true : false;
+                    writeArmorButton.Enabled = true;
+                    fillArmorList();
+                    break;
+            }
+        }
+
         private void fillSaveIDComboBox()
         {
-            try
+            saveSelector.Items.Clear();
+            DropDownItem tempItem;
+            string saveName;
+            string[] dirList;
+            if(SaveManager.getSavesDirectories(userIDComboBox.Text, out dirList))
             {
-                saveIDComboBox.Items.Clear();
-
-                foreach(string dir in SaveManager.getSavesDirectories(userIDComboBox.Text))
+                foreach(string dir in dirList)
                 {
-                    saveIDComboBox.Items.Add(dir.Substring(dir.LastIndexOf("\\") + 1));
+                    saveName = dir.Substring(dir.LastIndexOf("\\") + 1);
+                    tempItem = new DropDownItem(saveName, dir);
+                    saveSelector.Items.Add(tempItem);
                 }
-
-                saveIDComboBox.SelectedIndex = 0;
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(string.Format("SaveFile for \n\n{0} \n\ncould not be found", SaveManager.savesPath + userIDComboBox.Text + @"\" + SaveManager.folder), "Error in loading file");
+                saveSelector.SelectedIndex = 0;
             }
         }
 
         private void changeWriteButtonText(string input)
         {
-            changesButton.Text = $"Write changes to {input} file";
+            changesButton.Text = $"Write changes to {input.Replace(" Tool", "")} file";
+        }
+
+        void regrowAllTrees()
+        {
+            if(SaveManager.folder == null)
+            {
+                MessageBox.Show("Please select SaveGame first", "Tree regrow tool");
+            }
+            else
+            {
+                string saveGame = SaveManager.completePath.Split(@"SonsOfTheForest\")[1];
+                DialogResult dialogResult = MessageBox.Show(string.Format("Warning: \n" +
+                                                            "This will regrow ALL trees, even the ones you removed the stump.\n\n" +
+                                                            "Trees might grow through your base or buildings you built! \n" +
+                                                            "There is no check if its possible! \n\n" +
+                                                            "Are you sure you want to regrow all trees for the following SaveGame?\n\n" +
+                                                            "{0}", saveGame),
+                                                            "Tree regrow warning!",
+                                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+                if(dialogResult == DialogResult.Yes)
+                {
+                    File.Delete(SaveManager.completePath + "WorldObjectLocatorManagerSaveData.json");
+                }
+            }
         }
     }
 }

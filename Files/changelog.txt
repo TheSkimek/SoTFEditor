@@ -1,5 +1,14 @@
 ﻿SOFTEditor Changelog:
 ######
+Version 1.4:
+- Specific armor slots can now be changed separately in the armor
+- Added thumbnails to the save file selection
+- Added bigger thumbnail to show the currently selected thumbnail
+- Adjusted Readme.txt
+
+Version 1.3:
+- Several backend changes
+
 Version 1.2:
 - Changed layout to tabs to make important tools more visible
 - Move armor tool to own tab

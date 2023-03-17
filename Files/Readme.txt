@@ -22,9 +22,11 @@ find the correct location and what to change.
 Current functions include:
 - Create Backup of save files
 - Change your inventory (also works with items you didnt have in your inventory yet)
-- Give all currently available items into inventory
+- Give all currently available items into inventory (amount: 100)
 - Remove all items
-- Change armor to whatever you like (armor points will be set to 9999)
+- Change all armor to whatever you selected (armor points will be set to 9999)
+- Change specific armor slot to selected armor
+- Change armor points to specified value
 
 If there are still items i missed, there is a "ItemIDList.csv" file in the "Files" folder, where you can add any ItemId yourself.
 It does NOT work with items that are not (yet) in the game, like for example the rifle. Unreleased items that are added like this, will be
