@@ -16,7 +16,7 @@ namespace SoTFEditor
         JObject inventoryObject;
 
         MegaApiClient client;
-        string currentVersion, newVersion;
+        string currentVersion, newVersion, newChangeLog;
         bool needsUpdate;
         List<itemChange> itemChangesList = new List<itemChange>();
 
@@ -24,13 +24,17 @@ namespace SoTFEditor
 
         string itemIDListFile = System.Windows.Forms.Application.StartupPath + @"Files\ItemIDList.csv";
 
+        private int lastFocusedTextboxIndex = -1;
+
+        bool searchingText = false;
+
         public MainForm()
         {
             InitializeComponent();
 
             Task.Factory.StartNew(() => buildVersionText());
             SaveManager.setGameSavePath();
-            changeWriteButtonText(tabControl1.TabPages[tabControl1.SelectedIndex].Text);
+            changeWriteButtonText(tabControl1.SelectedTab.Text);
             readItemList();
             armorTypeBox.DataSource = Enum.GetValues(typeof(armorTypes));
         }
@@ -67,7 +71,7 @@ namespace SoTFEditor
         private void saveIDComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             SaveManager.changeCompletePath(userIDComboBox.Text, saveSelector.Text);
-           
+
             saveImageBox.Image = ((DropDownItem)saveSelector.SelectedItem).Image;
             openSaveGameFolderToolStripMenuItem.Enabled = true;
             openSaveGameFolderToolStripMenuItem.ToolTipText = string.Empty;
@@ -128,12 +132,12 @@ namespace SoTFEditor
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            changeWriteButtonText(tabControl1.TabPages[tabControl1.SelectedIndex].Text);
+            changeWriteButtonText(tabControl1.SelectedTab.Text);
             if(SaveManager.pathSet)
             {
                 fillSelectedPanel();
             }
-            MainForm.ActiveForm.Text = $"SoTFEditor - {tabControl1.TabPages[tabControl1.SelectedIndex].Text}";
+            MainForm.ActiveForm.Text = $"SoTFEditor - {tabControl1.SelectedTab.Text}";
         }
 
         private void armorTypeBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -146,6 +150,26 @@ namespace SoTFEditor
             ArmorTool.setAllArmor((armorTypes)armorTypeBox.SelectedValue);
             fillArmorList();
         }
+
+        private void searchButton_Click(object sender, EventArgs e)
+        {
+            searchFunction();
+        }
+
+        private void searchBox_Enter(object sender, EventArgs e)
+        {
+            TextBox searchBox = (TextBox)sender;
+            searchingText = true;
+            if(searchBox.Text == "Search Text...")
+            {
+                searchBox.Text = string.Empty;
+            }
+        }
+
+        private void newAmountBox_Enter(object sender, EventArgs e)
+        {
+            searchingText = false;
+        }
         #endregion
 
         private void checkForUpdate()
@@ -156,7 +180,11 @@ namespace SoTFEditor
 #else
             if(needsUpdate)
             {
-                if(MessageBox.Show(string.Format("There is a new Version available: \n\nCurrent Version: {0}\nNew Version: {1}\n\nDo you want to download the newer Version?", currentVersion, newVersion), "Check for Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if(MessageBox.Show(string.Format("There is a new Version available: " +
+                                                    "\n\nCurrent Version: {0}" +
+                                                    "\nNew Version: {1}" +
+                                                    "\n\n####\nChangelog:{2}\n####" +
+                                                    "\n\nDo you want to download the newer Version?", currentVersion, newVersion, newChangeLog), "Check for Update", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     client.LoginAnonymous();
                     Uri updateZipLink = new Uri("https://mega.nz/folder/96wgVRDA#GgMSlj5JmwPV9WGc-UU9Ng");
@@ -229,6 +257,8 @@ namespace SoTFEditor
 
             currentVersion = File.ReadAllText(node.Name);
             newVersion = File.ReadAllText("Temp" + node.Name);
+            newChangeLog = newVersion.Split("#")[1];
+            newVersion = newVersion.Split("#")[0];
             File.Delete("Temp" + node.Name);
             client.Logout();
             needsUpdate = currentVersion != newVersion;
@@ -291,6 +321,7 @@ namespace SoTFEditor
                 newAmountBox.Location = new Point(distance * 2, pointY);
                 newAmountBox.Width = boxWidth;
                 newAmountBox.KeyPress += newAmountBox.validateCustomTextBoxNumber;
+                newAmountBox.Enter += newAmountBox_Enter;
 
                 inventoryPanel.Controls.Add(newAmountBox);
 
@@ -299,6 +330,7 @@ namespace SoTFEditor
             inventoryPanel.Show();
             maxButton.Enabled = true;
             emptyButton.Enabled = true;
+            searchButton.Enabled = true;
             writeArmorButton.Enabled = true;
         }
 
@@ -328,11 +360,11 @@ namespace SoTFEditor
                 armorPanel.Controls.Add(selectedArmor);
                 string checkSlot = ((int)Enum.Parse(typeof(armorSlots), selectedArmor.parentSlotId)).ToString();
 
-                armorPieceChange changedArmor = ArmorTool.changedArmorPieces.FirstOrDefault(x => x.slotID == checkSlot,null);
+                armorPieceChange changedArmor = ArmorTool.changedArmorPieces.FirstOrDefault(x => x.slotID == checkSlot, null);
 
                 if(changedArmor != null)
                 {
-                    selectedArmor.SelectedIndex = selectedArmor.FindStringExact(Enum.GetName(typeof(armorTypes),changedArmor.newArmorID));
+                    selectedArmor.SelectedIndex = selectedArmor.FindStringExact(Enum.GetName(typeof(armorTypes), changedArmor.newArmorID));
                     selectedArmor.BackColor = Color.LightCoral;
                     changesButton.Enabled = true;
                 }
@@ -350,7 +382,7 @@ namespace SoTFEditor
                 selectedArmor.SelectedIndexChanged += (sender2, e2) => registerChangedComboBox(sender2, e2, selectedArmor.oldIndex);
 
                 CustomTextBox armorValueBox = new CustomTextBox();
-                
+
                 armorValueBox.oldValue = armorValueBox.Text;
                 armorValueBox.parentItemId = armorSlot;
                 armorValueBox.Location = new Point(distance * 2, pointY);
@@ -462,13 +494,13 @@ namespace SoTFEditor
 
         private void writeFile()
         {
-            switch(tabControl1.SelectedIndex)
+            switch(tabControl1.SelectedTab.Name)
             {
-                case 0:
+                case "inventoryTab":
                     SaveManager.writeToFile(saveFile.inventory, newInventoryString());
                     fillList();
                     break;
-                case 1:
+                case "armorTab":
                     ArmorTool.setChangedArmor();
                     fillArmorList();
                     break;
@@ -551,14 +583,14 @@ namespace SoTFEditor
 
         private void fillSelectedPanel()
         {
-            switch(tabControl1.SelectedIndex)
+            switch(tabControl1.SelectedTab.Name)
             {
-                case 0:
+                case "inventoryTab":
                     armorPanel.Controls.Clear();
                     changesButton.Enabled = itemChangesList.Count > 0 ? true : false;
                     fillList();
                     break;
-                case 1:
+                case "armorTab":
                     inventoryPanel.Controls.Clear();
                     changesButton.Enabled = ArmorTool.changedArmorPieces.Count > 0 ? true : false;
                     writeArmorButton.Enabled = true;
@@ -582,6 +614,10 @@ namespace SoTFEditor
                     saveSelector.Items.Add(tempItem);
                 }
                 saveSelector.SelectedIndex = 0;
+            }
+            else
+            {
+                saveImageBox.Image = null;
             }
         }
 
@@ -612,6 +648,58 @@ namespace SoTFEditor
                 {
                     File.Delete(SaveManager.completePath + "WorldObjectLocatorManagerSaveData.json");
                 }
+            }
+        }
+
+        private void searchFunction()
+        {
+            string searchString = searchBox.Text.ToLower();
+            if(searchString == "" || searchString == "search text..." || !searchingText)
+            {
+                return;
+            }
+
+            bool found = false;
+
+            for(int i = lastFocusedTextboxIndex + 1; i < inventoryPanel.Controls.Count; i++)
+            {
+                if(inventoryPanel.Controls[i] is TextBox)
+                {
+                    TextBox textBox = (TextBox)inventoryPanel.Controls[i];
+
+                    if(textBox.Text.ToLower().Contains(searchString))
+                    {
+                        textBox.Focus();
+                        lastFocusedTextboxIndex = i;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if(!found)
+            {
+                // Loop from the beginning of the list up to the last focused textbox index.
+                for(int i = 0; i <= lastFocusedTextboxIndex; i++)
+                {
+                    if(inventoryPanel.Controls[i] is TextBox)
+                    {
+                        TextBox textBox = (TextBox)inventoryPanel.Controls[i];
+
+                        if(textBox.Text.ToLower().Contains(searchString))
+                        {
+                            textBox.Focus();
+                            lastFocusedTextboxIndex = i;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(!found)
+            {
+                MessageBox.Show($"{searchString} not found.");
             }
         }
     }

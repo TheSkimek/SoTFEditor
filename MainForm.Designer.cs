@@ -83,6 +83,8 @@
             emptyButton = new Button();
             tabControl1 = new TabControl();
             inventoryTab = new TabPage();
+            searchButton = new Button();
+            searchBox = new TextBox();
             armorTab = new TabPage();
             armorTypeBox = new ComboBox();
             armorPanel = new Panel();
@@ -115,7 +117,7 @@
             label1.BackColor = Color.LightGray;
             label1.BorderStyle = BorderStyle.FixedSingle;
             label1.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(8, 18);
+            label1.Location = new Point(8, 64);
             label1.Name = "label1";
             label1.Size = new Size(47, 25);
             label1.TabIndex = 0;
@@ -127,7 +129,7 @@
             label2.BackColor = Color.LightGray;
             label2.BorderStyle = BorderStyle.FixedSingle;
             label2.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            label2.Location = new Point(158, 18);
+            label2.Location = new Point(158, 64);
             label2.Name = "label2";
             label2.Size = new Size(106, 25);
             label2.TabIndex = 3;
@@ -139,7 +141,7 @@
             label3.BackColor = Color.LightGray;
             label3.BorderStyle = BorderStyle.FixedSingle;
             label3.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
-            label3.Location = new Point(308, 18);
+            label3.Location = new Point(308, 64);
             label3.Name = "label3";
             label3.Size = new Size(113, 25);
             label3.TabIndex = 4;
@@ -149,9 +151,9 @@
             // 
             inventoryPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             inventoryPanel.AutoScroll = true;
-            inventoryPanel.Location = new Point(8, 51);
+            inventoryPanel.Location = new Point(8, 95);
             inventoryPanel.Name = "inventoryPanel";
-            inventoryPanel.Size = new Size(512, 565);
+            inventoryPanel.Size = new Size(512, 522);
             inventoryPanel.TabIndex = 5;
             // 
             // panel2
@@ -165,9 +167,9 @@
             panel2.Controls.Add(radioButtonMultHost);
             panel2.Controls.Add(radioButtonSingle);
             panel2.Controls.Add(changesButton);
-            panel2.Location = new Point(530, 111);
+            panel2.Location = new Point(530, 73);
             panel2.Name = "panel2";
-            panel2.Size = new Size(320, 565);
+            panel2.Size = new Size(330, 604);
             panel2.TabIndex = 6;
             // 
             // saveSelector
@@ -195,6 +197,7 @@
             // 
             // userIDComboBox
             // 
+            userIDComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             userIDComboBox.FormattingEnabled = true;
             userIDComboBox.Location = new Point(12, 95);
             userIDComboBox.Name = "userIDComboBox";
@@ -240,11 +243,12 @@
             // 
             // versionLabel
             // 
+            versionLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             versionLabel.Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point);
             versionLabel.ImageAlign = ContentAlignment.MiddleRight;
-            versionLabel.Location = new Point(470, 683);
+            versionLabel.Location = new Point(383, 683);
             versionLabel.Name = "versionLabel";
-            versionLabel.Size = new Size(388, 25);
+            versionLabel.Size = new Size(485, 26);
             versionLabel.TabIndex = 5;
             versionLabel.Text = "Checking for Update...";
             versionLabel.TextAlign = ContentAlignment.MiddleRight;
@@ -255,7 +259,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { toolsToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(862, 28);
+            menuStrip1.Size = new Size(872, 28);
             menuStrip1.TabIndex = 7;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -500,9 +504,9 @@
             // maxButton
             // 
             maxButton.Enabled = false;
-            maxButton.Location = new Point(438, 16);
+            maxButton.Location = new Point(308, 13);
             maxButton.Name = "maxButton";
-            maxButton.Size = new Size(156, 29);
+            maxButton.Size = new Size(109, 29);
             maxButton.TabIndex = 8;
             maxButton.Tag = "True";
             maxButton.Text = "Set all to 100";
@@ -512,7 +516,7 @@
             // emptyButton
             // 
             emptyButton.Enabled = false;
-            emptyButton.Location = new Point(600, 16);
+            emptyButton.Location = new Point(423, 13);
             emptyButton.Name = "emptyButton";
             emptyButton.Size = new Size(94, 29);
             emptyButton.TabIndex = 9;
@@ -530,25 +534,49 @@
             tabControl1.Location = new Point(0, 31);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(862, 649);
+            tabControl1.Size = new Size(872, 650);
             tabControl1.TabIndex = 10;
+            tabControl1.Tag = "";
             tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
             // inventoryTab
             // 
             inventoryTab.Controls.Add(emptyButton);
+            inventoryTab.Controls.Add(searchButton);
             inventoryTab.Controls.Add(maxButton);
             inventoryTab.Controls.Add(inventoryPanel);
+            inventoryTab.Controls.Add(searchBox);
             inventoryTab.Controls.Add(label2);
             inventoryTab.Controls.Add(label1);
             inventoryTab.Controls.Add(label3);
             inventoryTab.Location = new Point(4, 29);
             inventoryTab.Name = "inventoryTab";
             inventoryTab.Padding = new Padding(3);
-            inventoryTab.Size = new Size(854, 616);
+            inventoryTab.Size = new Size(864, 617);
             inventoryTab.TabIndex = 0;
+            inventoryTab.Tag = "";
             inventoryTab.Text = "Inventory";
             inventoryTab.UseVisualStyleBackColor = true;
+            // 
+            // searchButton
+            // 
+            searchButton.Enabled = false;
+            searchButton.Location = new Point(200, 13);
+            searchButton.Name = "searchButton";
+            searchButton.Size = new Size(64, 29);
+            searchButton.TabIndex = 11;
+            searchButton.Text = "Search";
+            searchButton.UseVisualStyleBackColor = true;
+            searchButton.Click += searchButton_Click;
+            // 
+            // searchBox
+            // 
+            searchBox.Location = new Point(6, 15);
+            searchBox.Name = "searchBox";
+            searchBox.Size = new Size(188, 27);
+            searchBox.TabIndex = 10;
+            searchBox.Text = "Search Text...";
+            searchBox.Enter += searchBox_Enter;
             // 
             // armorTab
             // 
@@ -560,7 +588,7 @@
             armorTab.Location = new Point(4, 29);
             armorTab.Name = "armorTab";
             armorTab.Padding = new Padding(3);
-            armorTab.Size = new Size(854, 616);
+            armorTab.Size = new Size(864, 617);
             armorTab.TabIndex = 1;
             armorTab.Text = "Armor Tool";
             armorTab.UseVisualStyleBackColor = true;
@@ -577,9 +605,9 @@
             // armorPanel
             // 
             armorPanel.Controls.Add(label5);
-            armorPanel.Location = new Point(8, 51);
+            armorPanel.Location = new Point(8, 83);
             armorPanel.Name = "armorPanel";
-            armorPanel.Size = new Size(512, 455);
+            armorPanel.Size = new Size(512, 423);
             armorPanel.TabIndex = 5;
             // 
             // label5
@@ -607,9 +635,10 @@
             // 
             // MainForm
             // 
+            AcceptButton = searchButton;
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(862, 717);
+            ClientSize = new Size(872, 718);
             Controls.Add(panel2);
             Controls.Add(tabControl1);
             Controls.Add(versionLabel);
@@ -694,5 +723,7 @@
         private Label label5;
         private PictureBox saveImageBox;
         private SaveSelector saveSelector;
+        private TextBox searchBox;
+        private Button searchButton;
     }
 }

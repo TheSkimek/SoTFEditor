@@ -1,5 +1,10 @@
 ﻿SOFTEditor Changelog:
 ######
+Version 1.5:
+- Added search function in inventory tab
+- Added changelog preview for "Check for Update" function
+- Several layout changes
+
 Version 1.4:
 - Specific armor slots can now be changed separately in the armor
 - Added thumbnails to the save file selection
@@ -10,7 +15,7 @@ Version 1.3:
 - Several backend changes
 
 Version 1.2:
-- Changed layout to tabs to make important tools more visible
+- Changed layout to tabs to make important tools more visible 
 - Move armor tool to own tab
 
 Version 1.1.1:
