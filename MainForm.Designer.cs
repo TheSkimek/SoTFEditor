@@ -91,6 +91,7 @@
             label5 = new Label();
             writeArmorButton = new Button();
             toolTip1 = new ToolTip(components);
+            removeAllBlueprintsToolStripMenuItem = new ToolStripMenuItem();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)saveImageBox).BeginInit();
             menuStrip1.SuspendLayout();
@@ -265,7 +266,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { createBackupToolStripMenuItem, toolStripSeparator8, regrowAllTreesToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { createBackupToolStripMenuItem, toolStripSeparator8, regrowAllTreesToolStripMenuItem, removeAllBlueprintsToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(58, 24);
             toolsToolStripMenuItem.Tag = "";
@@ -274,19 +275,19 @@
             // createBackupToolStripMenuItem
             // 
             createBackupToolStripMenuItem.Name = "createBackupToolStripMenuItem";
-            createBackupToolStripMenuItem.Size = new Size(199, 26);
+            createBackupToolStripMenuItem.Size = new Size(236, 26);
             createBackupToolStripMenuItem.Text = "Create Backup";
             createBackupToolStripMenuItem.Click += createBackupToolStripMenuItem_Click;
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new Size(196, 6);
+            toolStripSeparator8.Size = new Size(233, 6);
             // 
             // regrowAllTreesToolStripMenuItem
             // 
             regrowAllTreesToolStripMenuItem.Name = "regrowAllTreesToolStripMenuItem";
-            regrowAllTreesToolStripMenuItem.Size = new Size(199, 26);
+            regrowAllTreesToolStripMenuItem.Size = new Size(236, 26);
             regrowAllTreesToolStripMenuItem.Text = "Regrow all trees";
             regrowAllTreesToolStripMenuItem.Click += regrowAllTreesToolStripMenuItem_Click;
             // 
@@ -633,6 +634,13 @@
             writeArmorButton.UseVisualStyleBackColor = true;
             writeArmorButton.Click += setArmorButton_Click;
             // 
+            // removeAllBlueprintsToolStripMenuItem
+            // 
+            removeAllBlueprintsToolStripMenuItem.Name = "removeAllBlueprintsToolStripMenuItem";
+            removeAllBlueprintsToolStripMenuItem.Size = new Size(236, 26);
+            removeAllBlueprintsToolStripMenuItem.Text = "Remove all Blueprints";
+            removeAllBlueprintsToolStripMenuItem.Click += removeAllBlueprintsToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             AcceptButton = searchButton;
@@ -725,5 +733,6 @@
         private SaveSelector saveSelector;
         private TextBox searchBox;
         private Button searchButton;
+        private ToolStripMenuItem removeAllBlueprintsToolStripMenuItem;
     }
 }

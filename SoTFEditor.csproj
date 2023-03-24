@@ -34,6 +34,9 @@
     <None Update="Files\changelog.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Files\emptyBlueprints.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Files\emptyInventorySave.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

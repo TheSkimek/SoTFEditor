@@ -702,5 +702,19 @@ namespace SoTFEditor
                 MessageBox.Show($"{searchString} not found.");
             }
         }
+
+        private void removeAllBlueprintsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = MessageBox.Show("Warning: \n" +
+                                                            "This will remove ALL blueprints in the world, including the ones you maybe still need.\n\n" +
+                                                            "Are you sure you want to remove all blueprints?",
+                                                            "Remove ALL blueprints warning",
+                                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+            if(dialogResult == DialogResult.Yes)
+            {
+                SaveManager.removeAllBlueprints();
+            }
+        }
     }
 }

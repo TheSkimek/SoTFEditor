@@ -1,5 +1,8 @@
 ﻿SOFTEditor Changelog:
 ######
+Version 1.5.1:
+- Added Tools -> "Remove all Blueprints" to remove blueprints that player has maybe lost or doesnt want to finish anymore
+
 Version 1.5:
 - Added search function in inventory tab
 - Added changelog preview for "Check for Update" function

@@ -8,7 +8,9 @@ namespace SoTFEditor
     {
         const string inventoryFile = "PlayerInventorySaveData.json";
         const string playerArmorFile = "PlayerArmourSystemSaveData.json";
+        const string blueprintFile = "ScrewStructureNodeInstancesSaveData.json";
         const string emptyInventorySave = @"\Files\emptyInventorySave.txt";
+        const string emptyBlueprintSave = @"\Files\emptyBlueprints.txt";
 
         public const string saveThumbnail = "SaveDataThumbnail.png";
 
@@ -157,6 +159,11 @@ namespace SoTFEditor
             } while(File.Exists(completeBackupName + ".rar"));
 
             return completeBackupName + ".rar";
+        }
+
+        public static void removeAllBlueprints()
+        {
+            File.Copy(System.Windows.Forms.Application.StartupPath + emptyBlueprintSave, completePath + blueprintFile, true);
         }
     }
 
