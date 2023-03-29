@@ -11,6 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Runtime.CompilerServices;
 using SoTFEditor.Tools;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace SoTFEditor
 {
@@ -18,6 +19,7 @@ namespace SoTFEditor
     {
         JObject saveFileObject;
         JObject inventoryObject;
+        JObject playerStateSaveObject, playerStateObject;
 
         MegaApiClient client;
         string currentVersion, newVersion, newChangeLog;
@@ -173,6 +175,16 @@ namespace SoTFEditor
         private void newAmountBox_Enter(object sender, EventArgs e)
         {
             searchingText = false;
+        }
+
+        private void setMaxBlueprintsButton_Click(object sender, EventArgs e)
+        {
+            BlueprintTool.setAllToMax();
+        }
+
+        private void removeAllBlueprintsButton_Click(object sender, EventArgs e)
+        {
+            BlueprintTool.removeBlueprints();
         }
         #endregion
 
@@ -716,16 +728,6 @@ namespace SoTFEditor
             {
                 MessageBox.Show($"{searchString} not found.");
             }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            BlueprintTool.setAllToMax();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            BlueprintTool.removeBlueprints();
         }
     }
 }

@@ -7,7 +7,8 @@ namespace SoTFEditor.Tools
     {
         const string inventoryFile = "PlayerInventorySaveData.json";
         const string playerArmorFile = "PlayerArmourSystemSaveData.json";
-        public const string blueprintFile = "ScrewStructureNodeInstancesSaveData.json";
+        const string blueprintFile = "ScrewStructureNodeInstancesSaveData.json";
+        const string playerStateFile = "PlayerStateSaveData.json";
         const string emptyInventorySave = @"\data\samples\emptyInventorySave.txt";
 
         static string _savesPath;
@@ -16,6 +17,7 @@ namespace SoTFEditor.Tools
         static string _inventorySaveString;
         static string _armorSaveString;
         static string _blueprintSaveString;
+        static string _playerStateString;
 
         public const string saveThumbnail = "SaveDataThumbnail.png";
         public static bool pathSet = false;
@@ -66,6 +68,16 @@ namespace SoTFEditor.Tools
                 _blueprintSaveString = File.ReadAllText(completePath + blueprintFile); 
 
                 return _blueprintSaveString;
+            }
+        }
+
+        public static string playerStateString
+        {
+            get
+            {
+                _playerStateString = File.ReadAllText(completePath + playerStateFile);
+
+                return _playerStateString;
             }
         }
 
@@ -132,6 +144,10 @@ namespace SoTFEditor.Tools
                     File.WriteAllText(completePath + blueprintFile, inputString);
                     _blueprintSaveString = File.ReadAllText(completePath + blueprintFile);
                     break;
+                case saveFile.playerState:
+                    File.WriteAllText(completePath + playerStateFile, inputString);
+                    _playerStateString = File.ReadAllText(completePath + playerStateFile);
+                    break;
             }
         }
 
@@ -176,6 +192,7 @@ namespace SoTFEditor.Tools
     {
         inventory,
         playerArmor,
-        structureBlueprints
+        structureBlueprints,
+        playerState
     }
 }

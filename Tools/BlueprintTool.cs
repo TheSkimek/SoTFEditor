@@ -26,6 +26,8 @@ namespace SoTFEditor.Tools
         static Panel blueprintPanel;
         static Button changeButton, setMaxButton, removeAllButton;
 
+        static JObject playerStateSaveObject, playerStateObject; //To be moved
+
         static int pointY = 10;
         static int distance = 135;
 
@@ -101,20 +103,20 @@ namespace SoTFEditor.Tools
                     blueprintPanel.Controls.Add(maxButton);
 
                     Button removeButton = new Button();
-                    removeButton.Text = "Remove this Blueprint";
+                    removeButton.Text = "Remove";
                     removeButton.Tag = blueprintData["Pos"].ToString();
-                    removeButton.Location = new Point(currentAmount.Location.X + distance+70, currentAmount.Location.Y);
-                    removeButton.Size = new Size(165, 30);
+                    removeButton.Location = new Point(currentAmount.Location.X + distance+60, currentAmount.Location.Y);
+                    removeButton.Size = new Size(76, 30);
                     removeButton.Click += removeButton_Click;
                     blueprintPanel.Controls.Add(removeButton);
 
-                    //Button teleportButton = new Button();
-                    //teleportButton.Text = "Teleport Player to this";
-                    //teleportButton.Tag = blueprintData["Pos"].ToString();
-                    //teleportButton.Location = new Point(distance * 2 + 40, pointY);
-                    //teleportButton.Size = new Size(167, 30);
-                    //teleportButton.Click += teleportButton_Click;
-                    //blueprintPanel.Controls.Add(teleportButton);
+                    Button teleportButton = new Button();
+                    teleportButton.Text = "Teleport";
+                    teleportButton.Tag = blueprintData["Pos"].ToString();
+                    teleportButton.Location = new Point(currentAmount.Location.X + distance + 145, currentAmount.Location.Y);
+                    teleportButton.Size = new Size(77, 30);
+                    teleportButton.Click += teleportButton_Click;
+                    blueprintPanel.Controls.Add(teleportButton);
 
                     pointY += 40;
                 }
@@ -287,6 +289,7 @@ namespace SoTFEditor.Tools
             Button button = sender as Button;
 
             Console.WriteLine($"Teleporting player to {button.Tag}");
+            setPlayerPosition(button.Tag.ToString());
         }
 
         private static void registerChangedBlueprint(object sender, EventArgs e)
@@ -335,12 +338,34 @@ namespace SoTFEditor.Tools
             changeButton.Enabled = changedBlueprintList.Count > 0;
         }
 
-        private static string cleanUpString(string inputString)
+        public static string cleanUpString(string inputString)
         {
             return inputString.Replace("{", "")
                               .Replace("}", "")
                               .Replace(" ", "")
                               .Replace("\r\n", "");
+        }
+
+        private static void setPlayerPosition(string targetPosition)
+        {
+            playerStateSaveObject = JsonConvert.DeserializeObject<JObject>(SaveManager.playerStateString);
+            JToken playerStateToken = playerStateSaveObject.SelectToken("Data.PlayerState");
+            playerStateObject = JsonConvert.DeserializeObject<JObject>(playerStateToken.ToString());
+            JArray playerStatesArray = JArray.Parse(playerStateObject["_entries"].ToString());
+            JToken positionToken = playerStatesArray.Where(x => x["Name"].ToString() == "player.position").First();
+            JArray positionArray = JArray.Parse(positionToken["FloatArrayValue"].ToString());
+
+            string changePositionString = targetPosition.Replace("\"x\": ", "")
+                                                                           .Replace("\"y\": ", "")
+                                                                           .Replace("\"z\": ", "")
+                                                                           .Replace("{", "[")
+                                                                           .Replace("}", "]");
+
+            positionToken["FloatArrayValue"] = JArray.Parse(BlueprintTool.cleanUpString(changePositionString));
+            playerStateObject["_entries"] = playerStatesArray;
+            playerStateSaveObject["Data"]["PlayerState"] = JsonConvert.SerializeObject(playerStateObject);
+
+            SaveManager.writeToFile(saveFile.playerState, JsonConvert.SerializeObject(playerStateSaveObject));
         }
     }
 }

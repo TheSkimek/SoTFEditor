@@ -1,5 +1,8 @@
 ﻿SOFTEditor Changelog:
 ######
+Version 1.6.1:
+- Added ability to teleport to each blueprint
+
 Version 1.6:
 - Changed file structure
 - Removed Tools -> "Remove all Blueprints". Blueprint Tools now have its own tab

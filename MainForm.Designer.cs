@@ -283,19 +283,19 @@
             // createBackupToolStripMenuItem
             // 
             createBackupToolStripMenuItem.Name = "createBackupToolStripMenuItem";
-            createBackupToolStripMenuItem.Size = new Size(224, 26);
+            createBackupToolStripMenuItem.Size = new Size(199, 26);
             createBackupToolStripMenuItem.Text = "Create Backup";
             createBackupToolStripMenuItem.Click += createBackupToolStripMenuItem_Click;
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new Size(221, 6);
+            toolStripSeparator8.Size = new Size(196, 6);
             // 
             // regrowAllTreesToolStripMenuItem
             // 
             regrowAllTreesToolStripMenuItem.Name = "regrowAllTreesToolStripMenuItem";
-            regrowAllTreesToolStripMenuItem.Size = new Size(224, 26);
+            regrowAllTreesToolStripMenuItem.Size = new Size(199, 26);
             regrowAllTreesToolStripMenuItem.Text = "Regrow all trees";
             regrowAllTreesToolStripMenuItem.Click += regrowAllTreesToolStripMenuItem_Click;
             // 
@@ -667,7 +667,7 @@
             setMaxBlueprintsButton.TabIndex = 4;
             setMaxBlueprintsButton.Text = "Set all to max";
             setMaxBlueprintsButton.UseVisualStyleBackColor = true;
-            setMaxBlueprintsButton.Click += button3_Click;
+            setMaxBlueprintsButton.Click += setMaxBlueprintsButton_Click;
             // 
             // label8
             // 
@@ -722,7 +722,7 @@
             removeAllBlueprintsButton.TabIndex = 0;
             removeAllBlueprintsButton.Text = "Remove all";
             removeAllBlueprintsButton.UseVisualStyleBackColor = true;
-            removeAllBlueprintsButton.Click += button2_Click;
+            removeAllBlueprintsButton.Click += removeAllBlueprintsButton_Click;
             // 
             // MainForm
             // 
