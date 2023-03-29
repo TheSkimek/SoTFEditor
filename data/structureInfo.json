@@ -1,0 +1,131 @@
+{
+	"storages": [
+		{
+			"id": 27,
+			"name": "Drying Rack",
+			"slots": 6,
+			"blueprintRequiredAmount": 13,
+			"fittingIds": [
+				433,
+				436
+			]
+		},
+		{
+			"id": 29,
+			"name": "Stick Storage",
+			"maxAmount": 90,
+			"blueprintRequiredAmount": 6,
+			"fittingIds": [
+				392
+			]
+		},
+		{
+			"id": 31,
+			"name": "Rock Storage",
+			"maxAmount": 17,
+			"blueprintRequiredAmount": 7,
+			"fittingIds": [
+				393
+			]
+		},
+		{
+			"id": 32,
+			"name": "Bone Storage",
+			"maxAmount": 50,
+			"blueprintRequiredAmount": 7,
+			"fittingIds": [
+				405
+			]
+		},
+		{
+			"id": 36,
+			"name": "Mannequin",
+			"blueprintRequiredAmount": 25
+		},
+		{
+			"id": 37,
+			"name": "Log Storage",
+			"maxAmount": 6,
+			"blueprintRequiredAmount": 8,
+			"fittingIds": [
+				78
+			]
+		},
+		{
+			"id": 49,
+			"name": "Shelf",
+			"maxAmount": 6,
+			"blueprintRequiredAmount": 5,
+			"fittingIds": [
+				78
+			]
+		}
+	],
+	"utility": [
+		{
+			"id": 39,
+			"name": "Scare Crow",
+			"blueprintRequiredAmount": 18
+		},
+		{
+			"id": 40,
+			"name": "Standing Planter",
+			"blueprintRequiredAmount": 18
+		},
+		{
+			"id": 56,
+			"name": "Rain Catcher",
+			"maxAmount": 90,
+			"blueprintRequiredAmount": 13
+		}
+	],
+	"shelter": [
+		{
+			"id": 26,
+			"name": "Lean To",
+			"blueprintRequiredAmount": 72
+		},
+		{
+			"id": 34,
+			"name": "Small Log Cabin",
+			"blueprintRequiredAmount": 95
+		},
+		{
+			"id": 38,
+			"name": "Lookout Tower",
+			"blueprintRequiredAmount": 74
+		},
+		{
+			"id": 47,
+			"name": "Hunting Shelter",
+			"blueprintRequiredAmount": 19
+		}
+	],
+	"furniture": [
+		{
+			"id": 20,
+			"name": "Stick Chair",
+			"blueprintRequiredAmount": 14
+		},
+		{
+			"id": 22,
+			"name": "Stick Bed",
+			"blueprintRequiredAmount": 17
+		},
+		{
+			"id": 26,
+			"name": "Bone Chair",
+			"blueprintRequiredAmount": 16
+		},
+		{
+			"id": 48,
+			"name": "Table",
+			"blueprintRequiredAmount": 7
+		},
+		{
+			"id": 52,
+			"name": "Bench",
+			"blueprintRequiredAmount": 3
+		}
+	]
+}

@@ -7,6 +7,10 @@ using System.IO.Compression;
 using System.Text.Unicode;
 using System.Text;
 using SoTFEditor.Properties;
+using static System.Net.Mime.MediaTypeNames;
+using System.Runtime.CompilerServices;
+using SoTFEditor.Tools;
+using System.Windows.Forms;
 
 namespace SoTFEditor
 {
@@ -22,7 +26,7 @@ namespace SoTFEditor
 
         public Dictionary<string, string> ItemIds = new Dictionary<string, string>();
 
-        string itemIDListFile = System.Windows.Forms.Application.StartupPath + @"Files\ItemIDList.csv";
+        string itemIDListFile = System.Windows.Forms.Application.StartupPath + @"data\ItemIDList.csv";
 
         private int lastFocusedTextboxIndex = -1;
 
@@ -175,7 +179,7 @@ namespace SoTFEditor
         private void checkForUpdate()
         {
 #if DEBUG
-            MessageBox.Show("Is in DEBUG Mode!");
+            MessageBox.Show("Is in DEVELOPER Version!");
             return;
 #else
             if(needsUpdate)
@@ -226,7 +230,7 @@ namespace SoTFEditor
         {
 #if DEBUG
             currentVersion = File.ReadAllText("Version.txt");
-            string versionText = $"DEBUG {currentVersion}";
+            string versionText = $"DEVELOPER {currentVersion}";
             versionLabel.Text = versionText;
 #else
             string versionText = !checkVersions() ? currentVersion : string.Format("{0}   [New Version available: {1}]", currentVersion, newVersion);
@@ -504,6 +508,9 @@ namespace SoTFEditor
                     ArmorTool.setChangedArmor();
                     fillArmorList();
                     break;
+                case "blueprintTab":
+                    BlueprintTool.writeNewBlueprints();
+                    break;
             }
         }
 
@@ -587,14 +594,22 @@ namespace SoTFEditor
             {
                 case "inventoryTab":
                     armorPanel.Controls.Clear();
-                    changesButton.Enabled = itemChangesList.Count > 0 ? true : false;
+                    blueprintPanel.Controls.Clear();
+                    changesButton.Enabled = itemChangesList.Count > 0;
                     fillList();
                     break;
                 case "armorTab":
                     inventoryPanel.Controls.Clear();
-                    changesButton.Enabled = ArmorTool.changedArmorPieces.Count > 0 ? true : false;
+                    blueprintPanel.Controls.Clear();
+                    changesButton.Enabled = ArmorTool.changedArmorPieces.Count > 0;
                     writeArmorButton.Enabled = true;
                     fillArmorList();
+                    break;
+                case "blueprintTab":
+                    inventoryPanel.Controls.Clear();
+                    armorPanel.Controls.Clear();
+                    changesButton.Enabled = BlueprintTool.changedBlueprintList.Count > 0;
+                    BlueprintTool.outputBlueprints(blueprintPanel, changesButton, setMaxBlueprintsButton, removeAllBlueprintsButton);
                     break;
             }
         }
@@ -703,18 +718,14 @@ namespace SoTFEditor
             }
         }
 
-        private void removeAllBlueprintsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show("Warning: \n" +
-                                                            "This will remove ALL blueprints in the world, including the ones you maybe still need.\n\n" +
-                                                            "Are you sure you want to remove all blueprints?",
-                                                            "Remove ALL blueprints warning",
-                                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+            BlueprintTool.setAllToMax();
+        }
 
-            if(dialogResult == DialogResult.Yes)
-            {
-                SaveManager.removeAllBlueprints();
-            }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            BlueprintTool.removeBlueprints();
         }
     }
 }

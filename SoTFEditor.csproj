@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="MegaApiClient" Version="1.10.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +31,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="data\ItemIDList.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\structureInfo.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\samples\emptyInventorySave.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Files\changelog.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

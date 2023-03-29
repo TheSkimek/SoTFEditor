@@ -1,5 +1,15 @@
 ﻿SOFTEditor Changelog:
 ######
+Version 1.6:
+- Changed file structure
+- Removed Tools -> "Remove all Blueprints". Blueprint Tools now have its own tab
+- Added Blueprint Tool Tab. Functions include:
+-- Remove all blueprints in world
+-- Set all blueprints to "almost done" (otherwise the game wont register the blueprint as completed when all required items are put in this way. However it ignores the exact item requirement, so you will always need the last item only)
+-- Remove specific blueprint in world
+-- Set specific blueprint to max or set custom count of added items (cant exceed required amount - 1)
+-- Change blueprint to another blueprint (switch stick storage blueprint to log cabin blueprint)
+
 Version 1.5.1:
 - Added Tools -> "Remove all Blueprints" to remove blueprints that player has maybe lost or doesnt want to finish anymore
 

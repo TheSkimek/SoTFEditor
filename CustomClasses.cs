@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using SoTFEditor.Tools;
 
 namespace SoTFEditor
 {
@@ -30,6 +31,9 @@ namespace SoTFEditor
         public string parentSlotId { get; set; }
         public int oldIndex { get; set; }
         public bool changedValue { get; set; }
+
+        public CustomTextBox? linkedTextBoxCurrent;
+        public CustomTextBox? linkedTextBoxMax;
     }
 
     public class itemChange
@@ -71,6 +75,22 @@ namespace SoTFEditor
             this.slotID = _slotID;
             this.oldArmorPoints = _oldArmorPoints;
             this.newArmorPoints = _newArmorID;
+        }
+    }
+
+    public class BlueprintChange
+    {
+        public string posID;
+        public string structureID;
+        public string addedAmount;
+        public bool addedByStruct;
+
+        public BlueprintChange(string _posID, string _structureID, string _addedAmount, bool _addedByStruct)
+        {
+            posID = _posID;
+            structureID = _structureID;
+            addedAmount = _addedAmount;
+            addedByStruct = _addedByStruct;
         }
     }
 

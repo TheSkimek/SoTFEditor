@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
-namespace SoTFEditor
+namespace SoTFEditor.Tools
 {
     public static class ArmorTool
     {
@@ -25,7 +25,7 @@ namespace SoTFEditor
                 return _armorPieces;
             }
         }
-        
+
         public static void setAllArmor(armorTypes selectedArmor)
         {
             string armorPoints = "9999.0";
@@ -34,7 +34,7 @@ namespace SoTFEditor
 
             _armorPieces.Clear();
 
-            foreach(int slotNumber in Enum.GetValues(typeof(armorSlots)))
+            foreach (int slotNumber in Enum.GetValues(typeof(armorSlots)))
             {
                 JObject pieceToAdd = new JObject(new JProperty("ItemId", ((int)selectedArmor).ToString()),
                                               new JProperty("Slot", slotNumber.ToString()),
@@ -63,21 +63,21 @@ namespace SoTFEditor
             armorPieceChange nextPieceChange;
             armorPointsChange nextPointsChange;
 
-            foreach(var armor in armorPieces)
+            foreach (var armor in armorPieces)
             {
                 newArmorID = int.Parse(armor["ItemId"].ToString());
                 armorPoints = armor["RemainingArmourpoints"].ToString();
                 armorSlot = armor["Slot"].ToString();
 
                 nextPieceChange = changedArmorPieces.Where(x => x.slotID == armor["Slot"].ToString()).FirstOrDefault();
-                if(nextPieceChange != null)
+                if (nextPieceChange != null)
                 {
                     newArmorID = nextPieceChange.newArmorID;
                 }
 
                 nextPointsChange = changedArmorPoints.Where(x => x.slotID == armor["Slot"].ToString()).FirstOrDefault();
 
-                if(nextPointsChange != null)
+                if (nextPointsChange != null)
                 {
                     armorPoints = nextPointsChange.newArmorPoints;
                 }
@@ -102,7 +102,7 @@ namespace SoTFEditor
         {
             string enumNameString = "";
 
-            switch(inputEnum)
+            switch (inputEnum)
             {
                 case enumNames.armorType:
                     armorTypes tempType = (armorTypes)Enum.Parse(typeof(armorTypes), input);
@@ -140,7 +140,7 @@ namespace SoTFEditor
         Chest = 1,
         Shoulder1 = 4,
         Shoulder2 = 5,
-        LeftArm = 6, 
+        LeftArm = 6,
         RightArm = 7,
         UpperLeftLeg = 8,
         UpperRightLeg = 9,

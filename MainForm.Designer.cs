@@ -90,8 +90,14 @@
             armorPanel = new Panel();
             label5 = new Label();
             writeArmorButton = new Button();
+            blueprintTab = new TabPage();
+            setMaxBlueprintsButton = new Button();
+            label8 = new Label();
+            label6 = new Label();
+            blueprintPanel = new Panel();
+            label4 = new Label();
+            removeAllBlueprintsButton = new Button();
             toolTip1 = new ToolTip(components);
-            removeAllBlueprintsToolStripMenuItem = new ToolStripMenuItem();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)saveImageBox).BeginInit();
             menuStrip1.SuspendLayout();
@@ -99,6 +105,8 @@
             inventoryTab.SuspendLayout();
             armorTab.SuspendLayout();
             armorPanel.SuspendLayout();
+            blueprintTab.SuspendLayout();
+            blueprintPanel.SuspendLayout();
             SuspendLayout();
             // 
             // changesButton
@@ -266,7 +274,7 @@
             // 
             // toolsToolStripMenuItem
             // 
-            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { createBackupToolStripMenuItem, toolStripSeparator8, regrowAllTreesToolStripMenuItem, removeAllBlueprintsToolStripMenuItem });
+            toolsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { createBackupToolStripMenuItem, toolStripSeparator8, regrowAllTreesToolStripMenuItem });
             toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             toolsToolStripMenuItem.Size = new Size(58, 24);
             toolsToolStripMenuItem.Tag = "";
@@ -275,19 +283,19 @@
             // createBackupToolStripMenuItem
             // 
             createBackupToolStripMenuItem.Name = "createBackupToolStripMenuItem";
-            createBackupToolStripMenuItem.Size = new Size(236, 26);
+            createBackupToolStripMenuItem.Size = new Size(224, 26);
             createBackupToolStripMenuItem.Text = "Create Backup";
             createBackupToolStripMenuItem.Click += createBackupToolStripMenuItem_Click;
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new Size(233, 6);
+            toolStripSeparator8.Size = new Size(221, 6);
             // 
             // regrowAllTreesToolStripMenuItem
             // 
             regrowAllTreesToolStripMenuItem.Name = "regrowAllTreesToolStripMenuItem";
-            regrowAllTreesToolStripMenuItem.Size = new Size(236, 26);
+            regrowAllTreesToolStripMenuItem.Size = new Size(224, 26);
             regrowAllTreesToolStripMenuItem.Text = "Regrow all trees";
             regrowAllTreesToolStripMenuItem.Click += regrowAllTreesToolStripMenuItem_Click;
             // 
@@ -302,7 +310,7 @@
             // 
             openReadMeToolStripMenuItem.Name = "openReadMeToolStripMenuItem";
             openReadMeToolStripMenuItem.Size = new Size(248, 26);
-            openReadMeToolStripMenuItem.Tag = ".\\Files\\Readme.txt";
+            openReadMeToolStripMenuItem.Tag = ".\\files\\Readme.txt";
             openReadMeToolStripMenuItem.Text = "Open ReadMe";
             openReadMeToolStripMenuItem.Click += openFileToolStripMenuItem_Click;
             // 
@@ -531,6 +539,7 @@
             tabControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl1.Controls.Add(inventoryTab);
             tabControl1.Controls.Add(armorTab);
+            tabControl1.Controls.Add(blueprintTab);
             tabControl1.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
             tabControl1.Location = new Point(0, 31);
             tabControl1.Name = "tabControl1";
@@ -634,12 +643,86 @@
             writeArmorButton.UseVisualStyleBackColor = true;
             writeArmorButton.Click += setArmorButton_Click;
             // 
-            // removeAllBlueprintsToolStripMenuItem
+            // blueprintTab
             // 
-            removeAllBlueprintsToolStripMenuItem.Name = "removeAllBlueprintsToolStripMenuItem";
-            removeAllBlueprintsToolStripMenuItem.Size = new Size(236, 26);
-            removeAllBlueprintsToolStripMenuItem.Text = "Remove all Blueprints";
-            removeAllBlueprintsToolStripMenuItem.Click += removeAllBlueprintsToolStripMenuItem_Click;
+            blueprintTab.Controls.Add(setMaxBlueprintsButton);
+            blueprintTab.Controls.Add(label8);
+            blueprintTab.Controls.Add(label6);
+            blueprintTab.Controls.Add(blueprintPanel);
+            blueprintTab.Controls.Add(removeAllBlueprintsButton);
+            blueprintTab.Location = new Point(4, 29);
+            blueprintTab.Name = "blueprintTab";
+            blueprintTab.Padding = new Padding(3);
+            blueprintTab.Size = new Size(864, 617);
+            blueprintTab.TabIndex = 3;
+            blueprintTab.Text = "Blueprints";
+            blueprintTab.UseVisualStyleBackColor = true;
+            // 
+            // setMaxBlueprintsButton
+            // 
+            setMaxBlueprintsButton.Enabled = false;
+            setMaxBlueprintsButton.Location = new Point(379, 22);
+            setMaxBlueprintsButton.Name = "setMaxBlueprintsButton";
+            setMaxBlueprintsButton.Size = new Size(109, 29);
+            setMaxBlueprintsButton.TabIndex = 4;
+            setMaxBlueprintsButton.Text = "Set all to max";
+            setMaxBlueprintsButton.UseVisualStyleBackColor = true;
+            setMaxBlueprintsButton.Click += button3_Click;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.BackColor = Color.LightGray;
+            label8.BorderStyle = BorderStyle.FixedSingle;
+            label8.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            label8.Location = new Point(145, 64);
+            label8.Name = "label8";
+            label8.Size = new Size(196, 25);
+            label8.TabIndex = 3;
+            label8.Text = "Max / Required Amount";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.BackColor = Color.LightGray;
+            label6.BorderStyle = BorderStyle.FixedSingle;
+            label6.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            label6.Location = new Point(8, 64);
+            label6.Name = "label6";
+            label6.Size = new Size(81, 25);
+            label6.TabIndex = 2;
+            label6.Text = "Blueprint";
+            // 
+            // blueprintPanel
+            // 
+            blueprintPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            blueprintPanel.AutoScroll = true;
+            blueprintPanel.Controls.Add(label4);
+            blueprintPanel.Location = new Point(8, 95);
+            blueprintPanel.Name = "blueprintPanel";
+            blueprintPanel.Size = new Size(512, 516);
+            blueprintPanel.TabIndex = 1;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point);
+            label4.Location = new Point(120, 235);
+            label4.Name = "label4";
+            label4.Size = new Size(219, 32);
+            label4.TabIndex = 0;
+            label4.Text = "Select SaveFile first";
+            // 
+            // removeAllBlueprintsButton
+            // 
+            removeAllBlueprintsButton.Enabled = false;
+            removeAllBlueprintsButton.Location = new Point(379, 60);
+            removeAllBlueprintsButton.Name = "removeAllBlueprintsButton";
+            removeAllBlueprintsButton.Size = new Size(132, 29);
+            removeAllBlueprintsButton.TabIndex = 0;
+            removeAllBlueprintsButton.Text = "Remove all";
+            removeAllBlueprintsButton.UseVisualStyleBackColor = true;
+            removeAllBlueprintsButton.Click += button2_Click;
             // 
             // MainForm
             // 
@@ -666,6 +749,10 @@
             armorTab.ResumeLayout(false);
             armorPanel.ResumeLayout(false);
             armorPanel.PerformLayout();
+            blueprintTab.ResumeLayout(false);
+            blueprintTab.PerformLayout();
+            blueprintPanel.ResumeLayout(false);
+            blueprintPanel.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -733,6 +820,13 @@
         private SaveSelector saveSelector;
         private TextBox searchBox;
         private Button searchButton;
-        private ToolStripMenuItem removeAllBlueprintsToolStripMenuItem;
+        private TabPage blueprintTab;
+        private Panel blueprintPanel;
+        private Button removeAllBlueprintsButton;
+        private System.CodeDom.CodeTypeReference objectListView1;
+        private Label label4;
+        private Label label6;
+        private Label label8;
+        private Button setMaxBlueprintsButton;
     }
 }
